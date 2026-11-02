@@ -82,7 +82,5 @@ kbd{font:inherit;font-weight:700}
 @media(max-width:620px){.mode-selector{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 8px}.mode-selector .mode-tile{padding:9px 6px}.mode-visual{max-width:80px}.mode-label{min-height:1.2em;font-size:11px}.mode-caption{display:none}.workspace .conversation{min-height:760px}}
 
 @media(prefers-reduced-motion:reduce){.mode-selector .mode-tile{transition:none}}
-#mode-kim .mode-visual{border:3px solid #e4e5db;box-shadow:inset 0 0 0 1px #fff,0 3px 5px #14241f26}
-#mode-kim img{object-position:center 22%}
 .image-credits{font-size:9px;color:var(--muted);margin:-10px 0 14px;flex-shrink:0}
 .image-credits summary{cursor:pointer}.image-credits p{font-size:10px;line-height:1.6;margin:6px 0}.image-credits a{color:inherit}

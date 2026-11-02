@@ -16,7 +16,7 @@ Reflect: {
 
 Restart and reload; the new activity appears as a tab and works in live requests. Keep the built-in keys if you want their walkthroughs unchanged; edit the `tours` and `scriptedResponse` sections in `public/instrument-prototype.html` when replacing them. Walkthroughs are authored scenes, not automatically generated from new definitions.
 
-A perspective has `name`, `short`, `mark`, `role`, `description`, `instructions` and optionally `sample`. Use lowercase IDs such as `systems-thinker`; choose public figures or unnamed methods for public examples. A visit temporarily suspends the chosen activity and returns to it when you leave. The generated response interprets a lens; it does not speak for the actual person.
+A perspective has `name`, `short`, `mark`, `role`, `description`, `instructions` and optionally `sample`. Use lowercase IDs such as `systems-thinker`; choose deceased historical figures or unnamed methods for public examples. A visit temporarily suspends the chosen activity and returns to it when you leave. The generated response interprets a lens; it does not speak for the actual person.
 
 Use the [perspective skill](../.agents/skills/thought-leaders-to-perspectives/SKILL.md) to research candidates and distinguish source evidence from your operational interpretation. New definitions should make different decisions on the same input, not merely sound different.
 
@@ -38,3 +38,12 @@ The actual steering mechanics live in the `Instrument` reducer in `public/instru
 - The persistent pilot uses `public/modes.js` and `public/controls.js`; its mode buttons are in `public/index.html`. These are intentionally a separate earlier experiment.
 
 After an edit, run `npm test` and `npm run check`. Try the changed control at both extremes, stop/resume, a perspective visit and returning to the activity. Compare scripted behavior with an explicitly chosen live test only if you want to incur API charges.
+
+
+## Saved physical cards
+
+Mode/perspective enrollment is saved locally by `/api/cards` in
+`data/instrument-cards.json`; it uses the shared configuration to validate targets.
+Preserve IDs when editing a profile that already has assigned tags. The registry
+is private and must remain out of Git. Context/message assignments are still
+page-session-only. See [current status](STATUS.md) before changing tag lifetimes.

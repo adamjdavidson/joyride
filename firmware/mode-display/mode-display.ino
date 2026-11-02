@@ -5,10 +5,12 @@
 #include "src/port_bsp/i2c_bsp.h"
 #include "src/port_bsp/axp2101_bsp.h"
 #include "wifi_link.h"
+#include "mode_artwork.h"
 
 // Wi-Fi display. USB is only for programming and private network provisioning.
 I2cMasterBus displayBus(GPIO_NUM_7, GPIO_NUM_8, I2C_NUM_0);
-static lv_obj_t *heading, *title, *description, *returnLine, *statusLine, *connectionLine, *accent;
+static lv_obj_t *title, *artwork, *emptyCard;
+static String visibleMode;
 static uint32_t lastPacket = 0;
 static bool connected = false;
 static String input;
@@ -30,69 +32,52 @@ static lv_obj_t *label(int y, int width, const lv_font_t *font, uint32_t color) 
 }
 static void showDisconnected() {
   connected = false;
-  lv_label_set_text(heading, "THINKING INSTRUMENT");
-  lv_label_set_text(title, "WAITING");
-  lv_obj_set_style_text_font(title, &lv_font_montserrat_48, 0);
-  lv_label_set_text(description, "Open the instrument\non your computer.");
-  lv_label_set_text(returnLine, "");
-  lv_label_set_text(statusLine, "No current desk connected");
-  lv_obj_set_style_bg_color(statusLine, lv_color_hex(0x090C12), 0);
-  lv_label_set_text(connectionLine, wifiStatus());
-  lv_obj_set_style_bg_color(accent, lv_color_hex(0x090C12), 0);
+  visibleMode = "";
+  lv_obj_add_flag(artwork, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_remove_flag(emptyCard, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_set_style_text_font(title, &lv_font_montserrat_32, 0);
+  lv_label_set_text(title, "NO MODE SELECTED");
+  lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 350);
 }
 static void createUI() {
   lv_obj_t *screen = lv_screen_active();
-  lv_obj_set_style_bg_color(screen, lv_color_hex(0xFFFFFF), 0);
+  lv_obj_set_style_bg_color(screen, lv_color_hex(MODE_PAPER), 0);
   lv_obj_remove_flag(screen, LV_OBJ_FLAG_SCROLLABLE);
-  heading = label(62, 350, &lv_font_montserrat_18, 0xFFFFFF);
-  lv_obj_set_height(heading, 38); lv_obj_set_style_pad_top(heading, 8, 0);
-  lv_obj_set_style_bg_opa(heading, LV_OPA_COVER, 0); lv_obj_set_style_bg_color(heading, lv_color_hex(0x090C12), 0);
-  lv_obj_set_style_radius(heading, 5, 0);
-  accent = lv_obj_create(screen);
-  lv_obj_set_size(accent, 112, 6);
-  lv_obj_align(accent, LV_ALIGN_TOP_MID, 0, 112);
-  lv_obj_set_style_border_width(accent, 0, 0);
-  lv_obj_set_style_radius(accent, 2, 0);
-  title = label(144, 424, &lv_font_montserrat_48, 0x1457D9);
-  description = label(222, 370, &lv_font_montserrat_24, 0x090C12);
-  returnLine = label(308, 356, &lv_font_montserrat_22, 0x1457D9);
-  statusLine = label(365, 340, &lv_font_montserrat_18, 0xFFFFFF);
-  lv_obj_set_height(statusLine, 40); lv_obj_set_style_pad_top(statusLine, 8, 0);
-  lv_obj_set_style_bg_opa(statusLine, LV_OPA_COVER, 0); lv_obj_set_style_radius(statusLine, 5, 0);
-  connectionLine = label(416, 300, &lv_font_montserrat_18, 0x090C12);
+  artwork = lv_image_create(screen);
+  lv_obj_align(artwork, LV_ALIGN_TOP_MID, 0, 64);
+  // Native vector illustration of an empty card; no extra bitmap or decoder.
+  emptyCard = lv_obj_create(screen);
+  lv_obj_set_size(emptyCard, 134, 176);
+  lv_obj_align(emptyCard, LV_ALIGN_TOP_MID, 0, 104);
+  lv_obj_set_style_bg_opa(emptyCard, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_color(emptyCard, lv_color_hex(MODE_INK), 0);
+  lv_obj_set_style_border_width(emptyCard, 4, 0);
+  lv_obj_set_style_radius(emptyCard, 18, 0);
+  lv_obj_remove_flag(emptyCard, LV_OBJ_FLAG_SCROLLABLE);
+  lv_obj_t *dash = lv_obj_create(emptyCard);
+  lv_obj_set_size(dash, 48, 4);
+  lv_obj_center(dash);
+  lv_obj_set_style_bg_color(dash, lv_color_hex(MODE_INK), 0);
+  lv_obj_set_style_border_width(dash, 0, 0);
+  title = label(350, 400, &lv_font_montserrat_48, MODE_INK);
   showDisconnected();
 }
 static void applyState(cJSON *state) {
-  const char *mode = text(state, "mode", "Download");
-  const char *person = text(state, "person");
-  const char *name = mode, *detail = "Stay with the current activity.";
-  if (!strcmp(mode, "Download")) detail = "Articulate your thoughts.\nKeep your own direction.";
-  else if (!strcmp(mode, "Expand")) detail = "Broaden the idea.\nExplore what it could mean.";
-  else if (!strcmp(mode, "Challenge")) detail = "Find weak points, tensions\nand untested assumptions.";
-  else if (!strcmp(mode, "Structure")) detail = "Find the order\nand the missing elements.";
-  else if (!strcmp(mode, "Implement")) detail = "Turn the direction\ninto concrete work.";
-  if (*person) {
-    if (!strcmp(person, "freud")) { name = "SIGMUND FREUD"; detail = "Explore motives, desires\nand inner tensions."; }
-    else if (!strcmp(person, "machiavelli")) { name = "MACHIAVELLI"; detail = "Look at power, incentives\nand strategic consequences."; }
-    else if (!strcmp(person, "leonardo")) { name = "DA VINCI"; detail = "Observe the mechanism.\nInvent another possibility."; }
-  }
-  String upper = name; upper.toUpperCase();
-  lv_label_set_text(heading, *person ? "PERSPECTIVE VISIT" : "CURRENT ACTIVITY");
-  lv_obj_set_style_text_font(title, *person ? &lv_font_montserrat_32 : &lv_font_montserrat_48, 0);
+  const char *mode = text(state, "mode");
+  const lv_image_dsc_t *image = modeArtwork(mode);
+  // The dedicated mode screen keeps showing the mode during perspective visits.
+  // Heartbeats and unrelated control changes do not redraw the image.
+  if (connected && visibleMode == mode) return;
+  if (!image) { showDisconnected(); connected = true; return; }
+  lv_obj_add_flag(emptyCard, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_set_style_text_font(title, &lv_font_montserrat_48, 0);
+  lv_image_set_src(artwork, image);
+  lv_obj_remove_flag(artwork, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_align(artwork, LV_ALIGN_TOP_MID, 0, 64);
+  String upper = mode; upper.toUpperCase();
   lv_label_set_text(title, upper.c_str());
-  lv_label_set_text(description, detail);
-  String returning = *person ? String("Return to ") + mode : "";
-  lv_label_set_text(returnLine, returning.c_str());
-  const char *status = text(state, "status", "ready");
-  const char *statusText = "Ready when you are";
-  if (!strcmp(status, "stopped")) statusText = "STOPPED - tap gas to resume";
-  else if (!strcmp(status, "thinking")) statusText = "Thinking";
-  else if (!strcmp(status, "responding")) statusText = "Responding";
-  else if (!strcmp(status, "error")) statusText = "Check the conversation";
-  lv_label_set_text(statusLine, statusText);
-  lv_obj_set_style_bg_color(statusLine, lv_color_hex(!strcmp(status, "stopped") ? 0xCC1438 : 0x1457D9), 0);
-  lv_label_set_text(connectionLine, !strcmp(text(state, "engine"), "live") ? "LIVE AI  /  WI-FI CONNECTED" : "SCRIPTED DEMO  /  WI-FI CONNECTED");
-  lv_obj_set_style_bg_color(accent, lv_color_hex(!strcmp(status, "stopped") ? 0xCC1438 : 0x1457D9), 0);
+  lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 350);
+  visibleMode = mode;
   connected = true;
 }
 static void receivePacket(const String &line) {
@@ -103,13 +88,14 @@ static void receivePacket(const String &line) {
   cJSON *state = cJSON_GetObjectItemCaseSensitive(packet, "state");
   bool valid = cJSON_IsNumber(version) && version->valueint == 1 && cJSON_IsNumber(seq);
   bool online = cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(packet, "connected"));
-  if (valid && (!online || cJSON_IsObject(state))) {
+  cJSON *mode = cJSON_GetObjectItemCaseSensitive(state, "mode");
+  if (valid && (!online || (cJSON_IsObject(state) && (cJSON_IsNull(mode) || modeArtwork(text(state, "mode")))))) {
     lastPacket = millis();
     if (bsp_lvgl_lock(0)) {
       if (online) applyState(state); else showDisconnected();
       bsp_lvgl_unlock();
       // Acknowledge after updating UI objects; LVGL paints on its own task.
-      Serial.printf("{\"type\":\"display_ack\",\"v\":1,\"seq\":%.0f,\"connected\":%s,\"heap\":%u}\n", seq->valuedouble, online ? "true" : "false", ESP.getFreeHeap());
+      Serial.printf("{\"type\":\"display_ack\",\"v\":1,\"seq\":%.0f,\"connected\":%s,\"heap\":%u,\"mode\":\"%s\"}\n", seq->valuedouble, online ? "true" : "false", ESP.getFreeHeap(), visibleMode.c_str());
       wifiAcknowledge(seq->valuedouble, online);
     }
   }
@@ -125,7 +111,7 @@ void setup() {
   if (bsp_lvgl_lock(0)) { Lcd_SetBacklight(90); createUI(); bsp_lvgl_unlock(); }
   input.reserve(8192);
   wifiBegin();
-  Serial.println("{\"type\":\"display_ready\",\"v\":1,\"role\":\"mode\",\"firmware\":\"2.1.0-camera\"}");
+  Serial.println("{\"type\":\"display_ready\",\"v\":1,\"role\":\"mode\",\"firmware\":\"3.0.1-navy\"}");
 }
 void loop() {
   int processed = 0;
@@ -144,6 +130,5 @@ void loop() {
   }
   if (connected && millis() - lastPacket > 5000 && bsp_lvgl_lock(100)) { showDisconnected(); bsp_lvgl_unlock(); }
   wifiLoop(receivePacket);
-  if (!connected && bsp_lvgl_lock(100)) { lv_label_set_text(connectionLine, wifiStatus()); bsp_lvgl_unlock(); }
   delay(5);
 }

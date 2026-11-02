@@ -8,6 +8,8 @@ import { Store } from '../src/store.js';
 import { InstrumentLive } from '../src/instrument-live.js';
 import { DisplayState, SerialDisplay } from '../src/instrument-displays.js';
 import { WifiDisplays } from '../src/wifi-displays.js';
+import { CardRegistry } from '../src/instrument-cards.js';
+import { fileURLToPath } from 'node:url';
 
 process.umask(0o077);
 const dataDirectory=new URL('../data/',import.meta.url);
@@ -18,6 +20,7 @@ if (!['demo','live'].includes(config.mode) || !Number.isFinite(config.budget) ||
 const store = new Store(new URL('../data/pilot.sqlite', import.meta.url), { recover: false });
 const live = new InstrumentLive({ config, store });
 const token = randomBytes(32).toString('hex');
+const cards = new CardRegistry(fileURLToPath(new URL('../data/instrument-cards.json', import.meta.url)));
 const displayState = new DisplayState();
 let wifiConfig;
 try { wifiConfig = JSON.parse(readFileSync(new URL('../data/displays/wifi.json', import.meta.url), 'utf8')); }
@@ -45,6 +48,30 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Referrer-Policy', 'no-referrer');
   res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
   try {
+    if (url.pathname === '/api/cards') {
+      if (req.method === 'GET') {
+        if (req.headers['sec-fetch-site'] === 'cross-site') { res.writeHead(403).end(); return; }
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ ...await cards.read(), token })); return;
+      }
+      if (req.method !== 'POST' || !origins.has(req.headers.origin) || req.headers['x-instrument-token'] !== token || req.headers['content-type'] !== 'application/json') { res.writeHead(403).end(); return; }
+      const chunks = []; let bytes = 0;
+      for await (const chunk of req) { bytes += chunk.length; if (bytes > 2048) { res.writeHead(413).end(); return; } chunks.push(chunk); }
+      try {
+        const input = JSON.parse(Buffer.concat(chunks));
+        const readerResponse = await fetch('http://127.0.0.1:8767/state', { signal: AbortSignal.timeout(1500) });
+        if (!readerResponse.ok) throw new Error('Reader service unavailable.');
+        const snapshot = await readerResponse.json();
+        const present = Object.values(snapshot.state.readers).filter(r => r.connected && !r.error && r.uid);
+        if (present.length !== 1 || present[0].uid !== input.uid) throw new Error('Present only the card you want to assign, then try again.');
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ ...await cards.assign(input), token }));
+      } catch (error) {
+        res.writeHead(409, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+      }
+      return;
+    }
     if (url.pathname === '/api/displays/state') {
       if (req.method === 'GET') {
         if (req.headers['sec-fetch-site'] === 'cross-site') { res.writeHead(403).end(); return; }
@@ -79,7 +106,7 @@ const server = http.createServer(async (req, res) => {
       res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(await readFile(file)); return;
     }
     if (url.pathname === '/favicon.ico') { res.writeHead(204).end(); return; }
-    if (['/instrument-live.js', '/instrument-displays.js', '/joyride-config.js'].includes(url.pathname)) {
+    if (['/instrument-live.js', '/instrument-displays.js', '/joyride-config.js', '/instrument-cards.js'].includes(url.pathname)) {
       res.setHeader('Content-Type', 'text/javascript'); res.end(await readFile(new URL('../public' + url.pathname, import.meta.url))); return;
     }
     const match = url.pathname.match(/^\/hardware\/(wheel|nfc)\/(state|events)$/);

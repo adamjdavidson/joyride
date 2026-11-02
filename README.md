@@ -1,5 +1,14 @@
 # Joyride
 
+**Updated November 2, 2026:** [Mode objects and explanations](docs/MODES.md) ·
+[Historical perspectives and portraits](docs/PERSPECTIVES.md) ·
+[Hardware photos and walkthrough](docs/OBJECTS.md) · [Current status and open repairs](docs/STATUS.md).
+
+The physical experiment still needs RFID reliability work, continuous creative
+reach and persistent RFID context. This snapshot documents those limits and keeps
+the web demo usable without hardware.
+
+
 **A conversation you can steer.**
 
 Joyride is part of a project sponsored by OpenAI to explore physical interactions with AI: ways to use our full bodies and physical objects when thinking, imagining and developing ideas with a model.
@@ -40,9 +49,9 @@ Some of my best work has come from talking with a colleague who thinks different
 
 Then I need to get back to my work. With love and respect, I want that colleague, friend or mentor to go away for a while so I can concentrate on making something.
 
-Joyride tries to make that visit explicit. Invite a thinker to sit beside you for a minute. Hear what their perspective brings to the problem. Take what is useful, then end the visit and return to your activity. Your own visitors might be living or dead, real or mythical. The useful question is what their way of looking helps you notice.
+Joyride tries to make that visit explicit. Invite a thinker to sit beside you for a minute. Hear what their perspective brings to the problem. Take what is useful, then end the visit and return to your activity. The public examples use deceased historical figures or unnamed methods. The useful question is what their way of looking helps you notice.
 
-The public starting set contains interpretations inspired by **Sigmund Freud**, **Niccolò Machiavelli** and **Leonardo da Vinci**: possible motives and tensions; power, incentives and stability; observation, mechanisms and invention. These are prompts for looking at a problem, not the actual people, their endorsements or access to their private thoughts. A mythical visitor would be an imagined lens. Speculation about motives remains speculation, not diagnosis.
+The public starting set contains interpretations inspired by **Jane Jacobs**, **James Baldwin**, **Lucille Ball**, **Vasubandhu**, **Sigmund Freud**, **Niccolò Machiavelli** and **Leonardo da Vinci**. They bring different kinds of attention: lived systems, human truth, playful invention, conceptual frames, inner tensions, power and stability, and observation and invention. These are authored thinking lenses, not the actual people or their endorsements. See the illustrated [perspective guide](docs/PERSPECTIVES.md) for each profile, its questions, boundaries and sources.
 
 ## How this version works
 

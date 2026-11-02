@@ -10,7 +10,7 @@ The linked photos come from the manufacturers and suppliers. They show stock har
 
 **I built and ran this setup on a Raspberry Pi 5. It comfortably managed the connected devices and the agentic work involved in developing and running the experiment.** That is an important part of what I want to share: a small computer was enough to bring this collection of physical interfaces and AI tools together.
 
-The Pi runs the Joyride server, reads the wheel, pedals, buttons and NFC readers through the local adapters, and coordinates updates to the six small displays. It holds the session state and connects the physical controls to the conversation. It also served as the working computer for the coding agent and development tools used to build the system.
+The Pi runs the Joyride server, reads the wheel, pedals, buttons and NFC readers through the local adapters, and coordinates updates to the six small displays. It serves the app, holds private saved settings and tag assignments, and connects physical controls to the browser-owned desk state. It also served as the working computer for the coding agent and development tools used to build the system.
 
 The Pi handles that local software and coordination; the AI models are accessed through remote services. In Joyride’s live mode, model responses come through the API. The browser-only demo can run without those calls.
 
@@ -37,6 +37,22 @@ Buttons handle deliberate moves such as saving the current settings as my new no
 That combination lets me explore several things at once. My hands might move toward a stranger idea while my foot asks for a more considered response. I can stop, sit with what happened, and resume. The wheel and pedals give those changes a bodily feel.
 
 The included Linux adapter is in `services/wheel/`. It reads the controls without sending force-feedback commands to the wheel. The [manufacturer’s page](https://www.logitechg.com/en-us/shop/p/driving-force-racing-wheel) identifies the G29 family; the adapter targets USB `046d:c24f`. The [README](../README.md#how-this-version-works) explains the current control meanings in more detail.
+
+## A joystick as another way to steer
+
+The **Hyperkin Trooper II / Trooper V2** can share the input bridge with the G29.
+Left/right steers, forward applies gas, back applies the brake/stop, and holding
+the left button applies full clutch (maximum initiative). These are full
+button-like directional presses, while the G29 pedals retain analog pressure.
+The latest deliberate controller input takes over; centering releases it.
+After stopping, center remains stopped and a forward tap resumes.
+
+<img src="https://us.v-cdn.net/6031942/uploads/editor/qe/fxpb5z0ai3jv.jpg" width="360" alt="Hyperkin Trooper II USB joystick supplier photo">
+
+Photo and product background: [Micro Center’s introduction of the Trooper II](https://www.microcenter.com/site/mc-news/article/atari-trooper-ii.aspx?storeID=041).
+The service recognizes USB 2e24:386a; the left button is evdev 288 in the tested
+unit. Physical forward/back acceptance and the broader reliability checks remain
+part of [open work](STATUS.md). See [the input guide](../services/wheel/README.md).
 
 ## Six small Waveshare displays
 
@@ -96,7 +112,7 @@ The **Waveshare ESP32-S3-ePaper-3.97** is an 800 × 480 monochrome e-paper scree
 
 ### 6. The visiting perspective
 
-The **Waveshare ESP32-S3-ePaper-1.54** is a small, 200 × 200 monochrome e-paper screen. I use it for the visiting thinker’s portrait and name. Inviting a perspective can then have a visible presence beside the work; ending the visit clears the visitor state. The public firmware starts with name-only entries, and the portrait-encoding tool lets you supply your own images.
+The **Waveshare ESP32-S3-ePaper-1.54** is a small, 200 × 200 monochrome e-paper screen. I use it for the visiting thinker’s portrait and name. Inviting a perspective can then have a visible presence beside the work; ending the visit clears the visitor state. The public firmware includes five generated historical portrait frames and two name-only entries. See the [illustrated perspective guide](PERSPECTIVES.md) and the portrait manifest for the exact roster.
 
 <a href="https://www.waveshare.com/esp32-s3-epaper-1.54.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-s3-epaper-1.54-1.jpg" alt="Waveshare ESP32-S3-ePaper-1.54 manufacturer product photo" width="360"></a>
 
@@ -125,6 +141,8 @@ These are the additional listings mentioned above, with their own photos and lin
 Photos: Waveshare. On family pages, choose the named variant and check its revision before using a build recipe.
 
 ## Objects and cards I can place on the desk
+
+The five sculpted mode artworks and their meanings are in [Modes](MODES.md). The seven historical thinking lenses and portrait images are in [Perspectives](PERSPECTIVES.md).
 
 I use **two ACS ACR1552 NFC readers** to detect cards or tagged objects. A tag gives an object an identity that Joyride can associate with a mode, a perspective or a piece of context. The shape and meaning of the object are yours to choose.
 
@@ -212,11 +230,11 @@ python3 services/wheel/service.py
 python3 services/nfc/nfc_service.py
 ```
 
-The wheel exposes `http://127.0.0.1:8766/state`; NFC uses port 8767. Confirm `connected`/reader state before opening **Connect controls** in Joyride. Match button functions by pressing them. Present a card, choose its meaning, assign it, then lift and present it again. These browser mappings last for the current page session. Perspective removal ends a visit; context remains active until removed in the interface.
+The wheel exposes `http://127.0.0.1:8766/state`; NFC uses port 8767. Confirm `connected`/reader state before opening **Connect controls** in Joyride. Match button functions by pressing them. Present a card, choose its meaning, assign it, then lift and present it again. Mode/perspective assignments are saved locally through `/api/cards`; button and context/message mappings last for the current page session. A mode tag selects its mode while present; lifting the last mode tag clears it. On-screen activities also work without tags. Perspective removal ends a visit; context remains active until removed in the interface. Physical activation reliability and durable RFID context remain open work.
 
 The wheel reader uses kernel axis limits: steering is −1…1, pedals 0…1. Current axes are `ABS_X` steering, `ABS_Z` throttle, `ABS_RZ` brake, `ABS_Y` clutch, plus hat and button events. `--device` pins a device; the default discovery filters its USB identity. Edit discovery and `AXES` to support another evdev device. `mappings.json` defines optional semantic action events, and SIGHUP reloads it. The current browser consumes raw input and its own button bindings; changing action-event names alone will not remap the browser.
 
-The NFC reader keeps station identity separate from card meaning. `stations.json` and `cards.json` start empty. Add your own reader serials/roles and card mappings if using the service independently; SIGHUP reloads those registries. The browser's card mapping is separate. `49-thinking-console-nfc.rules` is an optional policy template with placeholders, not a ready-to-install grant. Ordinary local PC/SC access may need no extra policy.
+The NFC reader keeps station identity separate from card meaning. `stations.json` and `cards.json` start empty. Add your own reader serials/roles and card mappings if using the service independently; SIGHUP reloads those registries. The app's durable mode/perspective map is `data/instrument-cards.json`, separate from the reader service's optional `cards.json`. `49-thinking-console-nfc.rules` is an optional policy template with placeholders, not a ready-to-install grant. Ordinary local PC/SC access may need no extra policy.
 
 Both input APIs offer `/state`, `/health` and `/events?after=CURSOR&session=SESSION`. Start with state, then consume ordered events. On `resync`, reconcile current state without inventing past button presses. On disconnect, cancel held gestures; do not treat a disconnect as an intentional release or a request to send a message. NFC API version 2 handles independent readers; it does not promise multi-card inventory on one reader.
 
@@ -239,8 +257,10 @@ The build recipes preserve the original experimental targets. They are not a uni
 | Context | Panel/paint/font sources included in `firmware/context-display` | [Vendor repo](https://github.com/waveshareteam/ESP32-S3-ePaper-3.97), source commit `9b12d40731a80213b927ee8a421cae4082952819` |
 | Perspective | Panel/paint/font sources included in `firmware/perspective-display` | [Vendor repo](https://github.com/waveshareteam/ESP32-S3-ePaper-1.54), panel source commit `aaf395c1bbd86f7c5b7a2f9f0401241ff5c44956` |
 
+The mode build also requires Pillow and runs `scripts/encode-mode-artwork.py` to produce its generated LVGL header from the supplied PNGs.
+
 For example, once dependencies are in place, `python3 scripts/build-speed-display.py` compiles into `data/firmware-tools/speed-build/`. Back up the actual board's flash before any upload and use the board's real serial port and matching FQBN. USB bridge boards and native USB boards use different CDC options. The speed recipe's explicit FSPI selection and the context panel's ALDO3 power initialization are required by those targets.
 
 For Wi-Fi provisioning, create a local Python environment with `pyserial` and `cryptography`, then run `scripts/provision-display-wifi.py --help`. Choose a device ID and role; `--prepare` creates local credentials only, while `--device YOUR_SERIAL_PORT` transfers credentials to the board. The current helper expects Linux NetworkManager and `wlan0`. Restart the main server after registering devices, when no live request is running. A display retaining an image can be powered off; confirm both acknowledgment and visible refresh.
 
-The public perspective display starts with text-only entries. `scripts/encode-perspective-portraits.py` accepts a local JSON manifest and, optionally, square images whose reuse rights you have checked; it generates `portraits.h`. Pillow is required. The encoder never downloads or generates portraits. No personal photographs or generated face bitmaps are bundled.
+The public perspective display ships five generated historical portraits and two text-only entries. `scripts/encode-perspective-portraits.py` accepts a local JSON manifest and, optionally, square images whose reuse rights you have checked; it generates `portraits.h`. Pillow is required. The encoder never downloads or generates portraits. Only the historical frames listed in `firmware/perspective-display/portraits.json` are bundled. Private photographs and living-person portraits are excluded.

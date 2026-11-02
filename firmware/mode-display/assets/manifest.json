@@ -1,0 +1,41 @@
+{
+  "size": [
+    256,
+    256
+  ],
+  "format": "RGB565 little-endian, navy shading on white",
+  "ink": "#292163",
+  "paper": "#FFFFFF",
+  "images": {
+    "Download": {
+      "source": "assets/download.png",
+      "source_sha256": "e9d5b185f0099b1878362b2a81e6081208ecdc374fc0d0235d5bd738d0284123",
+      "rgb565_sha256": "b537bbc64bfa40414574368f32f1ded5e0892da199610253c1c23db4aa86fa5f",
+      "bytes": 131072
+    },
+    "Expand": {
+      "source": "assets/expand.png",
+      "source_sha256": "a145b4967805bcac92651028db1bdec538a11157f9b9a8de4291d0d5472c7740",
+      "rgb565_sha256": "ae7c00a696363c7a8bee574135361dcfd9350f78b9a2bd32205005b83a5cb100",
+      "bytes": 131072
+    },
+    "Challenge": {
+      "source": "assets/challenge.png",
+      "source_sha256": "b67d9a65fee3d781ae18288554421bab4bc593485a4d91f46988b462d4875c61",
+      "rgb565_sha256": "b9961882b7875dafed45d6a2892d20f0660c5ff09f1fc34eb4b4d9972b40498e",
+      "bytes": 131072
+    },
+    "Structure": {
+      "source": "assets/structure.png",
+      "source_sha256": "4c88a7dd2c308823a2ac6b62fd7b69973a33b57908215daee393e622a1efecb7",
+      "rgb565_sha256": "e7d0d7182a65cb8c35f3bb0bcf8b46c20bad7cc1edbb29d4c3141bde13ec7136",
+      "bytes": 131072
+    },
+    "Implement": {
+      "source": "assets/implement.png",
+      "source_sha256": "0ee648149a7b34aa97d8636ef3dedc07a47045e4670b30c8fe276855705d9c95",
+      "rgb565_sha256": "358885a40236b84f28199e0a98fc9fb99d779e12d569362dc2fc71797d886f6f",
+      "bytes": 131072
+    }
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "freud",
+    "first": "Sigmund",
+    "last": "Freud"
+  },
+  {
+    "id": "machiavelli",
+    "first": "Niccolò",
+    "last": "Machiavelli",
+    "image": "assets/machiavelli-display.png"
+  },
+  {
+    "id": "leonardo",
+    "first": "Leonardo",
+    "last": "da Vinci"
+  },
+  {
+    "id": "jane-jacobs",
+    "first": "Jane",
+    "last": "Jacobs",
+    "image": "assets/jane-jacobs-display.png"
+  },
+  {
+    "id": "james-baldwin",
+    "first": "James",
+    "last": "Baldwin",
+    "image": "assets/james-baldwin-display.png"
+  },
+  {
+    "id": "lucille-ball",
+    "first": "Lucille",
+    "last": "Ball",
+    "image": "assets/lucille-ball-display.png"
+  },
+  {
+    "id": "vasubandhu",
+    "first": "Vasubandhu",
+    "last": "",
+    "image": "assets/vasubandhu-display.png"
+  }
+]

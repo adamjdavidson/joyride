@@ -66,6 +66,8 @@ body[data-view="text"] button:focus-visible{outline:2px solid #555;outline-offse
 #liveComposer{padding:14px 20px;border-top:1px solid #e5e7de}
 #liveInput{display:block;width:100%;margin:8px 0;padding:10px;border:1px solid #cbd7be;border-radius:6px;background:#fafbf5;color:#35422f;font:inherit;resize:vertical}
 @media(max-width:640px){body[data-view="text"] .shell{padding:12px 8px 8px}body[data-view="text"] .topbar{align-items:center;flex-wrap:wrap;padding:0 8px}body[data-view="text"] .brand h1{font-size:17px}body[data-view="text"] .top-actions{gap:4px}body[data-view="text"] .conversation{padding:24px 16px}body[data-view="text"] #liveComposer{padding:8px 8px 0}body[data-view="text"] .composer{padding-right:8px}body[data-view="text"] .message.user{max-width:90%}}
+.chat-activity{flex:none;padding:10px 20px;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+body[data-view="text"] .chat-activity{width:100%;max-width:800px;align-self:center;padding:8px 16px;border:0;color:#666}
 </style>
 </head>
 <body data-view="instruments">
@@ -91,6 +93,7 @@ try { if(localStorage.getItem('instrument-screen-view')==='text')document.body.d
   <div>
    <section class="workspace" aria-label="Conversation">
     <div class="workspace-bar"><nav class="mode-tabs" id="modeTabs" aria-label="Choose activity"></nav><span class="eyebrow">Your workspace</span></div>
+    <div class="chat-activity" id="chatActivity" role="status" aria-live="polite" aria-atomic="true">Mode · Download</div>
     <div class="conversation" id="conversation" tabindex="0" aria-label="Scripted conversation"></div>
     <div class="context-strip" id="activeContexts"></div>
     <div id="liveComposer" hidden><label for="liveInput" class="eyebrow">What's on your mind?</label><div class="live-entry"><textarea id="liveInput" maxlength="16000" rows="2" placeholder="What's on your mind?" aria-description="Enter to send; Shift+Enter for a new line."></textarea><button class="primary" id="liveSend" aria-label="Send thought" title="Send thought"><span class="send-label">Send thought ↗</span><svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div><p id="liveBudget" class="muted" style="font-size:10px;margin-top:9px"></p><p id="liveError" role="alert" style="font-size:12px;color:#9a5140;margin-top:8px"></p><p class="muted live-note" style="font-size:10px;margin-top:7px">Text generation only · no browsing or file execution yet · reload clears this conversation</p></div>
@@ -112,15 +115,16 @@ try { if(localStorage.getItem('instrument-screen-view')==='text')document.body.d
  <footer class="foot"><span id="connectionLabel">On-screen controls · no AI calls · local session</span><span id="displayConnection">Mode display · connecting</span><span id="engineFootnote">Scripted responses & illustrative context · changes reset on reload</span></footer>
 </div>
 <div id="toast" class="toast" role="status" hidden></div>
-<dialog id="hardwareDialog"><div class="dialog-head"><h2>Connect your instrument</h2><button class="close" data-close="hardwareDialog" aria-label="Close">×</button></div><p>Optional input adapters can connect a wheel and card readers on your computer. The demo reads their inputs; it does not change the device profiles or write to cards. Mappings last for this page session.</p><button class="primary" id="connectHardware">Connect wheel & readers</button><button class="quiet" id="disconnectHardware">Disconnect</button><div class="hardware-state"><span id="wheelStatus">Wheel · not connected</span><span id="nfcStatus">Readers · not connected</span></div><h3 class="eyebrow">Map the wheel buttons</h3><p>Choose a function below, then press the matching physical button. The paddles work the same way.</p><div class="mapping-list" id="buttonMappings"></div><div id="hardwareMessage" class="notice" role="status"></div><h3 class="eyebrow">Assign a card</h3><p>Present a card to either reader. Choose what it represents here, then lift and present it again to activate it. Perspective removal ends a visit; context removal leaves it active.</p><label for="cardTarget">Card meaning</label><select id="cardTarget"></select><div class="row"><button class="primary" id="bindCard" disabled>Assign last detected card</button><small id="lastCard" class="muted">No card detected</small></div></dialog>
+<dialog id="hardwareDialog"><div class="dialog-head"><h2>Connect your instrument</h2><button class="close" data-close="hardwareDialog" aria-label="Close">×</button></div><p>Use the wheel, Trooper V2 joystick and NFC readers on this computer. Joystick: left/right steers, forward is gas, back stops, and holding the left button gives maximum initiative. Move either controller to take over; centering releases its controls. After stopping, push forward to resume. The demo reads their inputs; it does not change the device profiles or write to cards. Mode and perspective card assignments are saved on this computer and loaded automatically. On-screen activities work without hardware. A physical mode stays active while its tag is present; lifting the last mode tag clears it. Choose an on-screen activity to continue without a tag. Wheel buttons and context/message mappings last for this page session.</p><button class="primary" id="connectHardware">Connect controls & readers</button><button class="quiet" id="disconnectHardware">Disconnect</button><div class="hardware-state"><span id="wheelStatus">Controls · not connected</span><span id="nfcStatus">Readers · not connected</span></div><h3 class="eyebrow">Map the wheel buttons</h3><p>Choose a function below, then press the matching physical button. The paddles work the same way.</p><div class="mapping-list" id="buttonMappings"></div><div id="hardwareMessage" class="notice" role="status"></div><h3 class="eyebrow">Assign a card</h3><p>Present a card to either reader. Choose what it represents here, then lift and present it again to activate it. Perspective removal ends a visit; context removal leaves it active.</p><label for="cardTarget">Card meaning</label><select id="cardTarget"></select><div class="row"><button class="primary" id="bindCard" disabled>Assign last detected card</button><small id="lastCard" class="muted">No card detected</small></div></dialog>
 <dialog id="captureDialog"><div class="dialog-head"><h2>Put this on your bookshelf.</h2><button class="close" data-close="captureDialog" aria-label="Close">×</button></div><p>Keep this piece of the conversation as reusable context. This demo shelf lasts until you reload; you can download the item to keep it.</p><label for="contextTitle">Give it a name</label><input type="text" id="contextTitle" maxlength="65" value="A physical thinking instrument"><div class="card-preview" id="capturePreview"></div><div class="capture-actions"><button class="quiet" id="downloadContext">Download context</button><button class="primary" id="saveContext">Add to bookshelf</button></div></dialog>
 <script src="joyride-config.js"></script>
+<script src="instrument-cards.js"></script>
 <script src="instrument-live.js"></script>
 <script src="instrument-displays.js"></script>
 <script>
 /* Throwaway scripted interaction prototype. Question: do modes, visits, context cards,
    spring-return controls and saved defaults form a legible, playable instrument?
-   Live requests are handled by instrument-live.js; only the screen-view preference persists here. */
+   Live requests are handled by instrument-live.js; screen-view preference and Pi-held mode/perspective card assignments persist. */
 const config=globalThis.JoyrideConfig;
 const reach=(config.creative.labels.length-1)/2;
 const Instrument = (() => {
@@ -141,7 +145,7 @@ const Instrument = (() => {
  function reduce(s,a){
   const n={...s,axes:{...s.axes},defaults:{...s.defaults},captured:[...s.captured],contexts:[...s.contexts]};
   switch(a.type){
-   case 'MODE':if(!Object.hasOwn(config.activities,a.value))return s;n.mode=a.value;n.person=null;break;
+   case 'MODE':if(a.value!==null&&!Object.hasOwn(config.activities,a.value))return s;n.mode=a.value;if(!a.preservePerson)n.person=null;break;
    case 'PERSON':if(a.value!==null&&!Object.hasOwn(config.perspectives,a.value))return s;n.person=a.value;break;
    case 'AXIS':{
     const old=n.axes[a.key];n.axes[a.key]=a.value;
@@ -185,7 +189,12 @@ const originalBooks=[
  {id:'buddhism',name:'Buddhism: attention & attachment',type:'Illustrative research shelf',color:'#a4a5b4',body:'A demonstration reference prompt: explore attention, attachment to a preferred result, and the experience of observing a thought without immediately acting on it. This is a sample lens, not a researched source collection.'}
 ];
 let books=originalBooks.map(x=>({...x})),state=Instrument.initial(),messages=[],activeMessage=null,streamTimer=null,steerTimer=null,gasTimer=null,toastTimer=null,autoplayTimer=null,tourPlaying=false,tourKey='feel',tourIndex=-1,hardwareRunning=false,hardwareEpoch=0,learnButton=null,lastCard=null,captureText='',revision=0;
-const buttonBindings=new Map(),cardBindings=new Map(),visitingCards=new Map();
+const buttonBindings=new Map(),cardBindings=new Map();
+let cardRevision=0,cardToken='',lastCardLoad=0;
+const cardReader=new InstrumentCards({bindings:cardBindings,act:(action,passive)=>{
+ if(action.type==='MESSAGE'){pauseTour();messages.push({id:++revision,role:'user',speaker:'You',tag:'Saved message card',shown:action.value==='question'?'What am I missing?':'Continue this idea.'});renderMessages();if(!state.stopped)startResponse('Saved message card');return;}
+ dispatch(action,{rfid:true,respond:!passive});
+}});
 const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const say=text=>{clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2800);};
 const signature=s=>{const v=Instrument.values(s);return JSON.stringify([s.mode,s.person,s.contexts,v.wild,v.initiative,...(Live.enabled?[v.speed]:[])]);};
@@ -199,9 +208,12 @@ function makeDial(id,count,labels,color){
 function updateDial(id,value,min,max,base,label){const node=$(id),t=(value-min)/(max-min),b=(base-min)/(max-min);node.querySelector('.needle').style.transform=`rotate(${225+270*t}deg)`;node.querySelector('.needle').style.transformOrigin='130px 112px';node.querySelector('.default-marker').setAttribute('transform',`rotate(${225+270*b} 130 112)`);node.querySelector('.fill-arc').setAttribute('points',arc(135,135+270*t,75));node.querySelector('.value').textContent=label;node.setAttribute('aria-label',`${id.replace('Dial','')}: ${label}`);}
 function render(){
  const v=Instrument.values(state),person=people[state.person];
+ const modeLabel=state.mode||'No mode selected';
+ const chatActivity=person?`${person.name} · perspective · ${state.mode?'return to '+state.mode:modeLabel}`:state.mode?`Mode · ${state.mode}`:modeLabel;
+ if($('chatActivity').textContent!==chatActivity)$('chatActivity').textContent=chatActivity;
  document.body.classList.toggle('stopped',state.stopped);
- $('modeEyebrow').textContent=person?`Consultation · return to ${state.mode}`:'Current activity';$('modeName').textContent=person?person.name:state.mode;$('modeDescription').textContent=person?person.description:modes[state.mode];
- const status=state.stopped?'stopped':activeMessage?'working':'ready';$('status').dataset.status=status;$('statusText').textContent=state.stopped?'Stopped · tap gas to resume':activeMessage?'Working with your idea':'Ready when you are';
+ $('modeEyebrow').textContent=person?`Consultation · ${state.mode?'return to '+state.mode:modeLabel}`:'Current activity';$('modeName').textContent=person?person.name:modeLabel;$('modeDescription').textContent=person?person.description:(modes[state.mode]||'Choose an activity or place a mode tag on a reader. Lift it to clear the mode.');
+ const status=state.stopped?'stopped':activeMessage?'working':'ready';$('status').dataset.status=status;$('statusText').textContent=!state.mode?'No mode selected':state.stopped?'Stopped · tap gas to resume':activeMessage?'Working with your idea':'Ready when you are';
  updateDial('wildDial',v.offset,-reach,reach,0,v.offset>0?`+${v.offset}`:v.offset);updateDial('speedDial',v.speed,1,config.speed.length,v.base.speed,state.stopped?'STOP':v.speed);updateDial('initiativeDial',v.initiative,1,config.initiative.length,v.base.initiative,v.initiative);
  $('wildName').textContent=wildNames[v.offset+reach];$('wildReference').textContent=`Default · ${v.base.wild===0?'current normal':`${v.base.wild>0?'+':''}${v.base.wild} creative steps`}`;
  $('speedName').textContent=state.stopped?'Waiting for you':speedNames[v.speed];$('speedReference').textContent=`Default · ${v.base.speed} / ${speedNames[v.base.speed]}`;$('initiativeName').textContent=initiativeNames[v.initiative];$('initiativeReference').textContent=`Default · ${v.base.initiative}`;
@@ -210,12 +222,12 @@ function render(){
  for(const key of ['wheel','gas','brake','clutch']){if(document.activeElement!==$(key))$(key).value=state.axes[key];$(`${key}Readout`).textContent=key==='wheel'?(Math.abs(state.axes[key])<.06?'centered':`${Math.round(state.axes[key]*100)}%`):`${Math.round(state.axes[key]*100)}%`;}
  $('modeTabs').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.mode===state.mode&&!state.person);b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode&&!state.person));});
  $('people').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.person===state.person);b.setAttribute('aria-pressed',String(b.dataset.person===state.person));});
- $('leavePerson').hidden=!person;$('leavePerson').textContent=`← Return to ${state.mode}`;
+ $('leavePerson').hidden=!person;$('leavePerson').textContent=state.mode?`← Return to ${state.mode}`:'← Leave perspective';
  $('initiativeSteps').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',Number(b.dataset.level)===v.initiative);b.setAttribute('aria-pressed',String(Number(b.dataset.level)===v.initiative));});
  $('bookshelf').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',state.contexts.includes(b.dataset.book));b.querySelector('.book-mark').textContent=state.contexts.includes(b.dataset.book)?'✓':'+';b.setAttribute('aria-pressed',String(state.contexts.includes(b.dataset.book)));});
  $('activeContexts').innerHTML='<span class="eyebrow">On the desk</span><span class="base-tag">Project context</span>'+state.contexts.map(id=>`<span class="context-tag">${escapeHtml(books.find(b=>b.id===id)?.name??id)}</span>`).join('');
  $('removeNext').classList.toggle('active',state.removeNext);$('removeNext').setAttribute('aria-pressed',String(state.removeNext));$('removeBanner').hidden=!state.removeNext;
- $('continue').textContent=state.stopped?'Tap gas ↗':'Continue ↗';$('composerHint').textContent=state.stopped?'The activity stays paused until you tap the gas.':person?'A prepared interpretation of this perspective, free to choose its approach.':'Choose a mode, invite someone, or bring a context card to the desk.';
+ $('continue').disabled=!state.mode;$('continue').textContent=state.stopped?'Tap gas ↗':'Continue ↗';$('composerHint').textContent=!state.mode?'Choose an activity or place a mode tag to continue.':state.stopped?'The activity stays paused until you tap the gas.':person?'A prepared interpretation of this perspective, free to choose its approach.':'Choose a mode, invite someone, or bring a context card to the desk.';
  $('tourPlay').textContent=tourPlaying?'Ⅱ':'▶';$('tourPlay').setAttribute('aria-label',tourPlaying?'Pause walkthrough':'Play walkthrough');$('startDemo').textContent=tourPlaying?'Ⅱ Pause demo':'▶ Play demo';Live.render();PhysicalDisplays.queue();
 }
 function renderMessages(){
@@ -225,7 +237,8 @@ function renderMessages(){
 }
 function scriptedResponse(){
  const v=Instrument.values(state),has=id=>state.contexts.includes(id);
- let text='',speaker=state.person?`${people[state.person].name} · perspective`:'Thinking partner',tasks=null;
+ if(!state.mode)return {text:'Choose an activity or place a mode tag to begin.',speaker:'Thinking partner',tasks:null};
+ let text='',speaker=state.person?`${people[state.person].name} · perspective`:`Thinking partner · ${state.mode}`,tasks=null;
  const perspective=Object.fromEntries(Object.entries(people).map(([id,p])=>[id,p.sample||`Prepared illustration: ${p.description} Live AI uses this perspective’s instructions.`]));
  if(state.person)text=perspective[state.person];
  else if(!['Download','Expand','Challenge','Structure','Implement'].includes(state.mode))text=config.activities[state.mode].sample||`Prepared illustration: ${modes[state.mode]} Live AI uses this activity’s instructions.`;
@@ -253,6 +266,7 @@ function scriptedResponse(){
  return {text,speaker,tasks};
 }
 function startResponse(reason=''){
+ if(!state.mode){say('Choose an activity or place a mode tag to continue.');return;}
  if(Live.enabled){Live.start(reason);return;}
  clearTimeout(steerTimer);clearTimeout(streamTimer);
  if(activeMessage){activeMessage.annotation=activeMessage.shown?'Interrupted by your steering.':'Replaced before responding.';activeMessage=null;messages=messages.filter(m=>m.shown);}
@@ -262,7 +276,7 @@ function startResponse(reason=''){
 }
 function tickStream(){
  clearTimeout(streamTimer);if(!activeMessage)return;
- if(!state.stopped&&performance.now()>=activeMessage.readyAt){
+ if(state.mode&&!state.stopped&&performance.now()>=activeMessage.readyAt){
   const v=Instrument.values(state);activeMessage.index=Math.min(activeMessage.text.length,activeMessage.index+[0,3,5,8,13,20][v.speed]);activeMessage.shown=activeMessage.text.slice(0,activeMessage.index);
   if(activeMessage.index>=activeMessage.text.length){activeMessage.tasks=activeMessage.plannedTasks;activeMessage=null;render();}
   renderMessages();
@@ -270,7 +284,8 @@ function tickStream(){
  if(activeMessage)streamTimer=setTimeout(tickStream,32);
 }
 function pauseTour(){tourPlaying=false;clearTimeout(autoplayTimer);render();}
-function dispatch(action,{manual=true,respond=true}={}){
+function dispatch(action,{manual=true,respond=true,rfid=false}={}){
+ if(!rfid&&['MODE','PERSON','RESET'].includes(action.type))cardReader.releaseOwnership();
  if(manual)pauseTour();const before=state,prevSig=signature(state);state=Instrument.reduce(state,action);
  if(action.type==='AXIS'&&action.key==='gas'){
   if(state.resumePending&&!before.resumePending){clearTimeout(gasTimer);gasTimer=setTimeout(()=>{if(state.axes.gas>.06)dispatch({type:'RESUME'},{manual:false,respond:false});},420);}
@@ -281,7 +296,13 @@ function dispatch(action,{manual=true,respond=true}={}){
  if(action.type==='CLEAR')say('Card contexts cleared · project context stays');
  if(action.type==='CONTEXT'){const name=books.find(b=>b.id===action.value)?.name||'Context';say(before.removeNext?`${name} removed`:`${name} is on the desk`);}
  render();
- if(Live.enabled){Live.controls(before,prevSig,action);return;}
+ if(Live.enabled){Live.controls(before,prevSig,action,{respond});return;}
+ if(!state.mode){
+  clearTimeout(steerTimer);clearTimeout(streamTimer);
+  if(activeMessage){activeMessage.annotation='Mode tag removed. Choose an activity or place a mode tag to continue.';activeMessage=null;messages=messages.filter(m=>m.shown);renderMessages();}
+  render();return;
+ }
+ if(!respond&&prevSig!==signature(state)){clearTimeout(steerTimer);clearTimeout(streamTimer);if(activeMessage){activeMessage.annotation='Settings synchronized. Continue when ready.';activeMessage=null;messages=messages.filter(m=>m.shown);renderMessages();render();}}
  if(before.stopped&&!state.stopped){if(activeMessage&&activeMessage.signature!==signature(state))startResponse('Resumed with your settings');else if(activeMessage)tickStream();else if(respond)startResponse('Resumed');}
  if(respond&&!state.stopped&&prevSig!==signature(state)){
   clearTimeout(steerTimer);steerTimer=setTimeout(()=>startResponse(state.person?'A visitor joins':action.type==='CONTEXT'?'Context added':'Following your lead'),230);
@@ -322,7 +343,7 @@ function tourUI(){const t=tours[tourKey],step=t.steps[tourIndex];$('tourTitle').
 function applyScene(index){
  const t=tours[tourKey];tourIndex=Instrument.clamp(index,0,t.steps.length-1);
  // Reconstruct the selected scene from the start, so Back and Replay are deterministic.
- state=Instrument.initial();for(let i=0;i<=tourIndex;i++)for(const a of t.steps[i].actions)state=Instrument.reduce(state,a);
+ state=Instrument.initial();for(let i=0;i<=tourIndex;i++)for(const a of t.steps[i].actions)state=Instrument.reduce(state,a);if(cardReader.mode!==null)state.mode=cardReader.mode;
  clearTimeout(gasTimer);clearTimeout(steerTimer);tourUI();
  if(state.stopped){render();renderMessages();say('Stopped · the next scene taps the gas');}
  else startResponse(t.steps[tourIndex].title);
@@ -334,8 +355,8 @@ function scheduleScene(){clearTimeout(autoplayTimer);autoplayTimer=setTimeout(()
  if(tourIndex>=tours[tourKey].steps.length-1){pauseTour();say('Walkthrough complete · the controls are yours');return;}
  applyScene(tourIndex+1);
  },state.stopped?2400:3500);}
-function seedConversation(){messages=[{id:++revision,role:'user',speaker:'You',tag:'The starting thought',shown:'I want to stay with my thinking. What if I could change the kind of help I get without having to explain myself all over again?'}];const r=scriptedResponse();messages.push({id:++revision,role:'assistant',speaker:r.speaker,tag:'Download',shown:r.text,text:r.text,annotation:'Current normal · Conversational · initiative 3'});renderMessages();$('conversation').scrollTop=0;}
-function resetDemo({keepTour=false}={}){Live.reset();pauseTour();clearTimeout(streamTimer);clearTimeout(steerTimer);clearTimeout(gasTimer);activeMessage=null;state=Instrument.initial();books=originalBooks.map(x=>({...x}));tourIndex=-1;if(!keepTour)tourKey='feel';buildShelf();if(Live.enabled)renderMessages();else seedConversation();render();tourUI();say('A fresh desk · original defaults restored');}
+function seedConversation(){messages=[{id:++revision,role:'user',speaker:'You',tag:'The starting thought',shown:'I want to stay with my thinking. What if I could change the kind of help I get without having to explain myself all over again?'}];if(state.mode){const r=scriptedResponse();messages.push({id:++revision,role:'assistant',speaker:r.speaker,tag:state.mode,shown:r.text,text:r.text,annotation:'Current normal · Conversational · initiative 3'});}renderMessages();$('conversation').scrollTop=0;}
+function resetDemo({keepTour=false}={}){cardReader.releaseOwnership();Live.reset();pauseTour();clearTimeout(streamTimer);clearTimeout(steerTimer);clearTimeout(gasTimer);activeMessage=null;state=Instrument.initial();if(cardReader.mode!==null)state.mode=cardReader.mode;books=originalBooks.map(x=>({...x}));tourIndex=-1;if(!keepTour)tourKey='feel';buildShelf();if(Live.enabled)renderMessages();else seedConversation();render();tourUI();say('A fresh desk · original defaults restored');}
 function buildShelf(){
  $('bookshelf').innerHTML=books.map(b=>`<button class="book" style="--book:${b.color||'#a6b98a'}" data-book="${escapeHtml(b.id)}" title="${escapeHtml(b.body)}"><span class="book-text"><strong>${escapeHtml(b.name)}</strong><small>${escapeHtml(b.type)}</small></span><span class="book-mark">+</span></button>`).join('');$('shelfCount').textContent=`${books.length} cards`;buildCardTargets();
 }
@@ -356,7 +377,7 @@ function init(){
   updateViewButton();conversation.scrollTop=atEnd?conversation.scrollHeight:scroll;
  };
  makeDial('wildDial',config.creative.labels.length,config.creative.labels.map((_,i)=>i-reach),'#b8dfa1');makeDial('speedDial',config.speed.length,config.speed.map((_,i)=>i+1),'#ead18c');makeDial('initiativeDial',config.initiative.length,config.initiative.map((_,i)=>i+1),'#a4cfbf');
- $('modeTabs').innerHTML=Object.keys(modes).map(m=>`<button data-mode="${m}">${m}</button>`).join('');
+ $('modeTabs').innerHTML=Object.keys(modes).map(m=>`<button data-mode="${m}" title="Choose ${m} or place its tag">${m}</button>`).join('');
  $('people').innerHTML=Object.entries(people).map(([id,p])=>`<button class="person" data-person="${id}"><span class="person-icon">${p.mark}</span><span class="person-name">${p.short}</span><span class="person-role">${p.role}</span></button>`).join('');
  $('initiativeSteps').innerHTML=config.initiative.map((_,i)=>i+1).map(v=>`<button data-level="${v}" title="${initiativeNames[v]}">${v}</button>`).join('');
  $('tourTabs').innerHTML=Object.entries(tours).map(([id,t])=>`<button data-tour="${id}">${id==='feel'?'Explore':id==='shelf'?'Bookshelf':'Initiative'}</button>`).join('');
@@ -379,7 +400,7 @@ function init(){
  $('saveContext').onclick=()=>{const d=contextDocument(),book={id:`saved-${++revision}`,name:d.name,body:d.content,type:Live.enabled?'Saved from live AI':'Saved from this demo',color:'#b5a779'};books.push(book);buildShelf();render();$('captureDialog').close();say('Added to your bookshelf · tap its card to activate');};
  $('downloadContext').onclick=()=>{const d=contextDocument(),url=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='joyride-context.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
  $('hardwareOpen').onclick=()=>$('hardwareDialog').showModal();$('connectHardware').onclick=connectHardware;$('disconnectHardware').onclick=disconnectHardware;
- $('bindCard').onclick=()=>{if(!lastCard)return;cardBindings.set(lastCard.uid,$('cardTarget').value);$('hardwareMessage').textContent='Assigned for this demo. Lift and present the card again to activate it.';say('Card assigned · lift and present it again');};
+ $('bindCard').onclick=assignCard;
  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
  document.addEventListener('keydown',e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable],dialog'))return;if(e.target.closest('button')&&[' ','Enter'].includes(e.key))return;
   const actions={'ArrowLeft':()=>dispatch({type:'PADDLE',value:-1}),'ArrowRight':()=>dispatch({type:'PADDLE',value:1}),' ':()=>dispatch({type:'STOP'},{respond:false}),'Enter':()=>state.stopped?tapGas():startResponse('Continuing'),'l':()=>dispatch({type:'SAVE'},{respond:false}),'d':()=>dispatch({type:'FACTORY',value:true}),'Escape':()=>releaseInputs()};
@@ -397,18 +418,38 @@ function handleHardwareButton(event){
  if(event.edge!=='press')return;
  if(action==='paddleLeft')dispatch({type:'PADDLE',value:-1});if(action==='paddleRight')dispatch({type:'PADDLE',value:1});if(action==='save')dispatch({type:'SAVE'},{respond:false});if(action==='clear')dispatch({type:'CLEAR'});if(action==='remove')dispatch({type:'ARM_REMOVE'});
 }
-function handleCard(event){
- if(event.type==='card_present'){
-  lastCard={uid:event.uid,reader:event.reader_id};$('lastCard').textContent=`Card …${event.uid.slice(-6)} · ${event.label||'reader'}`;$('bindCard').disabled=false;
-  const target=cardBindings.get(event.uid);if(!target){$('hardwareMessage').textContent='New card detected. Choose its meaning and assign it.';return;}
-  const [kind,value]=target.split(':');if(kind==='context')dispatch({type:'CONTEXT',value});
-  if(kind==='mode')dispatch({type:'MODE',value});
-  if(kind==='person'){visitingCards.set(event.reader_id,{uid:event.uid,person:value});dispatch({type:'PERSON',value});}
-  if(kind==='message'){pauseTour();messages.push({id:++revision,role:'user',speaker:'You',tag:'Saved message card',shown:value==='question'?'What am I missing?':'Continue this idea.'});renderMessages();if(!state.stopped)startResponse('Saved message card');}
+function acceptCardRegistry(data){
+ cardRevision=data.revision;cardToken=data.token||cardToken;
+ for(const [uid,target]of cardBindings)if(/^(mode|person):/.test(target))cardBindings.delete(uid);
+ for(const [uid,target]of Object.entries(data.cards))cardBindings.set(uid,target);
+ lastCardLoad=Date.now();
+}
+async function loadCardRegistry(){
+ const r=await fetch('/api/cards',{signal:AbortSignal.timeout(1800)});
+ if(!r.ok)throw new Error('Saved card assignments are unavailable.');
+ acceptCardRegistry(await r.json());
+}
+function showDetectedCards(readers){
+ const present=Object.entries(readers).filter(([,r])=>r.connected&&!r.error&&r.uid);
+ lastCard=present.length===1?{uid:present[0][1].uid,reader:present[0][0]}:null;
+ $('bindCard').disabled=!lastCard;
+ $('lastCard').textContent=present.length===0?'No card detected':present.length>1?'Present only one card to assign it':(cardBindings.get(lastCard.uid)||'Unassigned card')+' · '+(present[0][1].label||'reader');
+}
+async function assignCard(){
+ if(!lastCard)return;
+ const card={...lastCard},target=$('cardTarget').value;
+ if(!/^(mode|person):/.test(target)){
+  if(cardBindings.has(card.uid)){say('This card is already assigned. Use a different card.');return;}
+  cardBindings.set(card.uid,target);say('Context/message mapping saved for this page only · lift and present again');return;
  }
- if(event.type==='card_removed'){
-  const visit=visitingCards.get(event.reader_id);if(visit&&visit.uid===event.uid){visitingCards.delete(event.reader_id);if(state.person===visit.person)dispatch({type:'PERSON',value:null});}
- }
+ $('bindCard').disabled=true;
+ try{
+  await loadCardRegistry();
+  const r=await fetch('/api/cards',{method:'POST',headers:{'Content-Type':'application/json','X-Instrument-Token':cardToken},body:JSON.stringify({uid:card.uid,target,revision:cardRevision}),signal:AbortSignal.timeout(2500)});
+  const data=await r.json();if(!r.ok)throw new Error(data.error||'Could not save assignment.');
+  acceptCardRegistry(data);$('hardwareMessage').textContent='Saved on this computer for future sessions. Lift and present the card again.';say('Card saved · lift and present it again');
+ }catch(error){$('hardwareMessage').textContent=error.message;}
+ finally{$('bindCard').disabled=!lastCard;}
 }
 async function hardwareGet(kind,path){const r=await fetch(`/hardware/${kind}/${path}`,{signal:AbortSignal.timeout(1800)});if(!r.ok)throw new Error('Service unavailable');return r.json();}
 async function connectHardware(){
@@ -416,36 +457,55 @@ async function connectHardware(){
  $('connectionLabel').textContent='Hardware bridge enabled · local inputs only · no AI calls';
  await Promise.allSettled([pollHardware('wheel',epoch),pollHardware('nfc',epoch)]);
 }
-function disconnectHardware(){hardwareRunning=false;hardwareEpoch++;learnButton=null;visitingCards.clear();releaseInputs();$('wheelStatus').textContent='Wheel · disconnected';$('nfcStatus').textContent='Readers · disconnected';$('connectionLabel').textContent='On-screen controls · no AI calls · local session';$('hardwareMessage').textContent='Disconnected. On-screen controls remain available.';}
+function disconnectHardware(){hardwareRunning=false;hardwareEpoch++;learnButton=null;cardReader.disconnect();releaseInputs();$('wheelStatus').textContent='Controls · disconnected';$('nfcStatus').textContent='Readers · disconnected';$('connectionLabel').textContent='On-screen controls · no AI calls · local session';$('hardwareMessage').textContent='Disconnected. On-screen controls remain available.';}
+function applyControllerData(data,resync){
+ const axisKey={steering:'wheel',throttle:'gas',brake:'brake',clutch:'clutch'};
+ if(resync){
+  // Passive snapshots never synthesize gas or button actions.
+  for(const [raw,value]of Object.entries(data.state.axes||{})){const key=axisKey[raw];if(key&&key!=='gas')dispatch({type:'AXIS',key,value},{manual:false,respond:false});}
+  return;
+ }
+ for(const event of data.events||[]){
+  if(event.type==='controls_reset'){releaseInputs();if(event.stop)dispatch({type:'STOP'},{manual:false,respond:false});continue;}
+  if(event.type!=='input')continue;
+  if(event.control.startsWith('button:'))handleHardwareButton(event);
+  else{const key=axisKey[event.control];if(key)dispatch({type:'AXIS',key,value:event.value},{respond:key==='wheel'||key==='clutch'});}
+ }
+}
 async function pollHardware(kind,epoch){
- let cursor=null,session=null,wasConnected=false;
+ let cursor=null,session=null,wasConnected=false,wasHidden=false;
  while(hardwareRunning&&epoch===hardwareEpoch){
   try{
+   if(kind==='nfc'&&(cursor===null||Date.now()-lastCardLoad>2000))await loadCardRegistry();
    const data=await hardwareGet(kind,cursor===null?'state':`events?after=${cursor}&session=${encodeURIComponent(session)}`);
    if(!hardwareRunning||epoch!==hardwareEpoch)return;
    const resync=cursor===null||data.resync;cursor=data.cursor;session=data.session;
    if(kind==='wheel'){
-    const connected=Boolean(data.state.connected);$('wheelStatus').textContent=connected?'Wheel · connected':'Wheel · service ready, device unavailable';
+    const connected=Boolean(data.state.connected),devices=data.state.devices;
+    const names=devices?Object.keys(devices).map(k=>k==='joystick'?'Trooper V2':'G29').join(' + '):'G29';
+    $('wheelStatus').textContent=connected?`${names} connected${data.state.active_controller?' · '+(data.state.active_controller==='joystick'?'joystick':'wheel')+' in control':''}`:'Controls · service ready, devices unavailable';
     if(resync||(!connected&&wasConnected)){releaseInputs();if(wasConnected)dispatch({type:'STOP'},{manual:false,respond:false});}
-    if(connected&&!document.hidden){
-     if(resync){for(const [raw,value]of Object.entries(data.state.axes||{})){const key={steering:'wheel',throttle:'gas',brake:'brake',clutch:'clutch'}[raw];if(key&&key!=='gas')dispatch({type:'AXIS',key,value},{manual:false,respond:false});}}
-     else for(const event of data.events||[]){if(event.type!=='input')continue;if(event.control.startsWith('button:'))handleHardwareButton(event);else{const key={steering:'wheel',throttle:'gas',brake:'brake',clutch:'clutch'}[event.control];if(key)dispatch({type:'AXIS',key,value:event.value},{respond:key==='wheel'||key==='clutch'});}}
-    }
-    wasConnected=connected;
+    if(connected&&!document.hidden)applyControllerData(data,resync||wasHidden);
+    wasConnected=connected;wasHidden=document.hidden;
    }else{
-    const readers=Object.values(data.state.readers||{}),connected=readers.filter(x=>x.connected).length;$('nfcStatus').textContent=`Readers · ${connected} connected`;
-    if(resync){for(const r of readers)if(r.uid){lastCard={uid:r.uid};$('lastCard').textContent=`Card …${r.uid.slice(-6)} detected`;$('bindCard').disabled=false;}}
-    else if(!document.hidden)for(const event of data.events||[])handleCard(event);
+    const readers=data.state.readers||{},connected=Object.values(readers).filter(x=>x.connected&&!x.error).length;$('nfcStatus').textContent=`Readers · ${connected} connected · ${cardBindings.size} assigned cards`;
+    showDetectedCards(readers);
+    // Reconcile hidden-tab changes without replaying message/context actions.
+    cardReader.update(readers,data.events||[],resync||document.hidden||wasHidden);
+    wasHidden=document.hidden;
+
    }
   }catch{
    if(!hardwareRunning||epoch!==hardwareEpoch)return;
-   if(kind==='wheel'){if(wasConnected){releaseInputs();dispatch({type:'STOP'},{manual:false,respond:false});}wasConnected=false;$('wheelStatus').textContent='Wheel · service unavailable';}else $('nfcStatus').textContent='Readers · service unavailable';
-   cursor=null;session=null;$('hardwareMessage').textContent='Run npm run demo and the input services on this computer to connect. The screen controls work independently.';
+   if(kind==='wheel'){if(wasConnected){releaseInputs();dispatch({type:'STOP'},{manual:false,respond:false});}wasConnected=false;$('wheelStatus').textContent='Controls · service unavailable';}else{cardReader.disconnect();lastCard=null;$('bindCard').disabled=true;$('nfcStatus').textContent='Readers · service or saved assignments unavailable';}
+   cursor=null;session=null;$('hardwareMessage').textContent='Run npm start and the input services on this computer to connect. The screen controls work independently.';
   }
   await new Promise(r=>setTimeout(r,kind==='wheel'?60:200));
  }
 }
 init();Live.init();PhysicalDisplays.init();
+// Hardware remains opt-in so the web demo needs no adapters.
+if(['http:','https:'].includes(location.protocol))loadCardRegistry().catch(()=>{});
 </script>
 </body>
 </html>

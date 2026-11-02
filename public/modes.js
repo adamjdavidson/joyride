@@ -18,16 +18,11 @@ export const MODES = {
     title: 'Buddha',
     description: 'Step back. Find clarity, compassion, and what actually matters.',
     instructions: 'Use a contemplative, Buddha-inspired perspective: pause, notice assumptions and attachments, distinguish what can be influenced from what can be let go, and bring compassion to everyone involved. Help the user find a clear, grounded next step without forcing productivity. Use plain language rather than mystical pronouncements. This is an inspired thinking lens, not a claim to be the Buddha or to speak with religious authority; do not invent quotations or teachings. Combine it with the user’s implementation, wildness, thinking effort, and critique settings.'
-  },
-  kim: {
-    title: 'Kim Kardashian',
-    description: 'Think audience, image, attention, and a compelling presentation.',
-    instructions: 'Use a Kim Kardashian-inspired creative business lens: examine how an idea looks and feels to its audience, what makes it memorable, how to present it confidently, and how attention could become sustained interest or a useful opportunity. Offer concrete packaging, positioning, and storytelling ideas while following the user’s actual subject. This is a stylized perspective, not impersonation or a claim about her private thoughts or endorsement; do not invent personal anecdotes, quotations, or factual claims about her. Keep factual accuracy and apply all four independent dial settings.'
   }
 };
 export const DEFAULT_MODE = 'play';
 export function validateMode(value) {
-  if (typeof value !== 'string' || !Object.hasOwn(MODES, value)) throw new Error('Choose Play, Extract, Boss, Buddha, or Kim Kardashian mode.');
+  if (typeof value !== 'string' || !Object.hasOwn(MODES, value)) throw new Error('Choose Play, Extract, Boss, or Buddha mode.');
   return value;
 }
 export function modeInstructions(value) {

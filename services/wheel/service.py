@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent, read-only G29 input service. No console or model dependencies."""
+"""Read-only G29 and Trooper V2 input bridge. No model dependencies."""
 import argparse
 from collections import deque
 import copy
@@ -7,7 +7,6 @@ import json
 import logging
 import math
 from pathlib import Path
-import select
 import signal
 import threading
 import time
@@ -78,7 +77,7 @@ class Mapper:
 
 class Hub:
     def __init__(self, mapper, capacity=4096):
-        self.lock = threading.Lock()
+        self.lock = threading.RLock()
         self.mapper = mapper
         self.events = deque(maxlen=capacity)
         self.sequence = 0
@@ -140,49 +139,21 @@ class Hub:
             return result
 
 
-def find_device(path=None):
+def find_device(path=None, joystick=False):
     for candidate in ([path] if path else list_devices()):
         device = None
         try:
             device = InputDevice(candidate)
             codes = {code for code, _ in device.capabilities().get(ecodes.EV_ABS, [])}
-            if (device.info.vendor, device.info.product) == (0x046d, 0xc24f) and set(AXES) <= codes:
+            identity = (0x2e24, 0x386a) if joystick else (0x046d, 0xc24f)
+            required = {ecodes.ABS_X, ecodes.ABS_Y} if joystick else set(AXES)
+            if (device.info.vendor, device.info.product) == identity and required <= codes:
                 return device
         except OSError:
             pass
         if device is not None:
             device.close()
-    raise OSError('G29 unavailable; check connection and input-device permissions')
-
-
-def read_hardware(hub, stop, path=None):
-    while not stop.is_set():
-        device = None
-        try:
-            device = find_device(path)
-            hub.connect(device)
-            ranges = {code: device.absinfo(code) for code in AXES}
-            while not stop.is_set():
-                if not select.select([device.fd], [], [], 0.25)[0]:
-                    continue
-                for event in device.read():
-                    if event.type == ecodes.EV_SYN and event.code == ecodes.SYN_DROPPED:
-                        # Reopen and query kernel state; never continue with stale held buttons.
-                        raise OSError('Input overflow; resynchronizing')
-                    if event.type == ecodes.EV_ABS and event.code in AXES:
-                        info = ranges[event.code]
-                        name = AXES[event.code]
-                        hub.input(name, normalize(name, event.value, info.min, info.max))
-                    elif event.type == ecodes.EV_KEY and event.value in (0, 1):
-                        hub.input(f'button:{event.code}', event.value,
-                                  'press' if event.value else 'release')
-        except (OSError, ValueError) as error:
-            hub.disconnect(str(error))
-            stop.wait(1)
-        finally:
-            if device is not None:
-                device.close()
-    hub.disconnect('Service stopped')
+    raise OSError(f'{"Trooper V2" if joystick else "G29"} unavailable; check connection and input-device permissions')
 
 
 def handler_for(hub):
@@ -225,10 +196,13 @@ def load_mapper(path):
 
 
 def main():
+    from controllers import Controllers, read_controller
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--device', help='Optional /dev/input/eventN; default discovers USB 046d:c24f')
     parser.add_argument('--mappings', default=str(Path(__file__).with_name('mappings.json')))
+    parser.add_argument('--clutch-button', type=int, default=288,
+                        help='Trooper V2 evdev button code for the clutch')
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
     hub = Hub(load_mapper(args.mappings))
@@ -238,9 +212,13 @@ def main():
     signal.signal(signal.SIGHUP, lambda *_: reload_requested.set())
     server = ThreadingHTTPServer(('127.0.0.1', args.port), handler_for(hub))
     server.timeout = 0.25
-    reader = threading.Thread(target=read_hardware, args=(hub, stop, args.device), daemon=True)
-    reader.start()
-    logging.info('G29 service: http://127.0.0.1:%s (Ctrl-C to stop)', args.port)
+    controllers = Controllers(hub)
+    readers = [threading.Thread(target=read_controller,
+                               args=(controllers, stop, source, args.clutch_button, path), daemon=True)
+               for source, path in [('g29', args.device), ('joystick', None)]]
+    for reader in readers:
+        reader.start()
+    logging.info('Wheel/joystick service: http://127.0.0.1:%s (Ctrl-C to stop)', args.port)
     try:
         while not stop.is_set():
             server.handle_request()
@@ -254,7 +232,8 @@ def main():
     finally:
         stop.set()
         server.server_close()
-        reader.join(timeout=2)
+        for reader in readers:
+            reader.join(timeout=2)
 
 
 if __name__ == '__main__':

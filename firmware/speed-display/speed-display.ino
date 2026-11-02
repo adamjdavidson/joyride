@@ -3,7 +3,7 @@
 #include <math.h>
 #include "wifi_link.h"
 
-// Waveshare ESP32-S3-Touch-LCD-1.28. USB is provisioning/power only.
+// Waveshare ESP32-S3-Touch-LCD-1.28. USB is programming/provisioning/power.
 TFT_eSPI panel;
 TFT_eSprite frame(&panel);
 static bool online = false, stopped = false, factory = false, overflow = false;
@@ -91,14 +91,16 @@ static void receivePacket(const String &line) {
 }
 void setup() {
   Serial.setRxBufferSize(16384); Serial.begin(115200); delay(350);
-  panel.init(); panel.setRotation(0); panel.fillScreen(bg);
+  // Mounted face was 90 degrees counterclockwise; rotate the entire layout
+  // clockwise so level 3 and the labels are upright together.
+  panel.init(); panel.setRotation(1); panel.fillScreen(bg);
   frame.setColorDepth(16);
   if (!frame.createSprite(240, 240)) {
     panel.setTextColor(TFT_WHITE); panel.drawString("Memory error", 30, 110, 2);
     while (true) delay(1000);
   }
   input.reserve(8192); drawGauge(); wifiBegin();
-  Serial.println("{\"type\":\"display_ready\",\"v\":1,\"role\":\"speed\",\"firmware\":\"1.1.0-camera\"}");
+  Serial.println("{\"type\":\"display_ready\",\"v\":1,\"role\":\"speed\",\"firmware\":\"1.1.1-upright\"}");
 }
 void loop() {
   int count = 0;

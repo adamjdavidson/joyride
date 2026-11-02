@@ -1,6 +1,6 @@
 ---
 name: thought-leaders-to-perspectives
-description: Identify public thought leaders and turn their documented methods into distinct thinking perspectives, or refine an existing perspective from source evidence.
+description: Identify deceased historical thinkers and turn their documented methods into distinct thinking perspectives, or refine an existing perspective from source evidence.
 ---
 
 # Thought leaders to perspectives
@@ -9,7 +9,7 @@ Produce an editable thinking lens grounded in a person's documented work. Its va
 
 ## Select for a useful difference
 
-Start with the user's subject, desired tension and existing perspectives. Honor their selected figures and exclusions. When candidates are needed, propose a small contrasting set of public figures: explain the intellectual move each offers and where it overlaps the existing roster. Popularity alone is weak evidence of a useful lens. Use an unnamed method when attribution would add little or the proposed person is private.
+Start with the user's subject, desired tension and existing perspectives. Honor their selected figures and exclusions. When candidates are needed, propose a small contrasting set of deceased historical figures: explain the intellectual move each offers and where it overlaps the existing roster. Popularity alone is weak evidence of a useful lens. Use an unnamed method when attribution would add little or the proposed person is private.
 
 ## Establish the method
 

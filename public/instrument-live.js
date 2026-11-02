@@ -39,6 +39,11 @@ const Live = (() => {
     if (activeMessage) { activeMessage.annotation = note; activeMessage = null; messages = messages.filter(m => m.shown); }
   }
   function controls(before, previousSignature, action) {
+    if (!state.mode) {
+      resumeNeeded = false;
+      interrupt('Mode tag removed. Choose an activity or place a mode tag to continue.');
+      renderMessages(); render(); return;
+    }
     const changed = previousSignature !== signature(state);
     if (state.stopped) {
       if (!before.stopped) { resumeNeeded = Boolean(request || timer || hasThought()); interrupt('Stopped. Tap gas to continue.'); renderMessages(); render(); }
@@ -55,6 +60,7 @@ const Live = (() => {
   async function start(reason = 'Continuing') {
     interrupt();
     if (!enabled || state.stopped) return;
+    if (!state.mode) { say('Choose an activity or place a mode tag to continue.'); return; }
     if (!hasThought()) { $('liveInput').focus(); say('Enter a thought to start the live conversation.'); return; }
     $('liveError').textContent = '';
     const current = ++epoch, id = crypto.randomUUID(), controller = new AbortController();
@@ -63,7 +69,7 @@ const Live = (() => {
     const payload = { id, mode: state.mode, person: state.person, controls: { wild: v.wild, speed: v.speed, initiative: v.initiative },
       contexts: state.contexts.map(key => books.find(b => b.id === key)).filter(Boolean).map(({ name, body }) => ({ name, body })),
       messages: history, continuing: history.at(-1)?.role === 'assistant' || reason !== 'Your thought' };
-    const message = { id: ++revision, role: 'assistant', speaker: state.person ? `${people[state.person].name} · perspective` : 'Thinking partner', tag: 'Live · ' + (state.person ? 'consultation' : state.mode), shown: '', annotation: `${wildNames[v.offset + reach]} · ${speedNames[v.speed]} · initiative ${v.initiative}` };
+    const message = { id: ++revision, role: 'assistant', speaker: state.person ? `${people[state.person].name} · perspective` : `Thinking partner · ${state.mode}`, tag: 'Live · ' + (state.person ? 'consultation' : state.mode), shown: '', annotation: `${wildNames[v.offset + reach]} · ${speedNames[v.speed]} · initiative ${v.initiative}` };
     request = { id, controller }; activeMessage = message; messages.push(message); renderMessages(); render();
     let terminal = false;
     try {

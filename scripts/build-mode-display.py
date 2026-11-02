@@ -2,8 +2,10 @@
 """Build the first mode display with the pinned, locally installed toolchain."""
 from pathlib import Path
 import subprocess
+import sys
 
 root = Path(__file__).resolve().parents[1]
+subprocess.run([sys.executable, str(root / "scripts/encode-mode-artwork.py")], check=True)
 tools = root / "data/firmware-tools"
 vendor = tools / "waveshare-c6-216/01_Arduino_Libraries"
 sketch = root / "firmware/mode-display"

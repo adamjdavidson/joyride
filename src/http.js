@@ -4,7 +4,6 @@ import { validateControls } from '../public/controls.js';
 import { DEFAULT_MODE, validateMode } from '../public/modes.js';
 const assets = { '/': ['index.html', 'text/html'], '/app.js': ['app.js', 'text/javascript'], '/styles.css': ['styles.css', 'text/css'], '/controls.js': ['controls.js', 'text/javascript'], '/modes.js': ['modes.js', 'text/javascript'], '/motion.js': ['motion.js', 'text/javascript'], '/audio.js': ['audio.js', 'text/javascript'] };
 for (const file of ['buddha.png']) assets[`/images/${file}`] = [`images/${file}`, 'image/png'];
-assets['/images/kim-kardashian.jpg'] = ['images/kim-kardashian.jpg', 'image/jpeg'];
 export function createHandler({ pilot, pairingCode, origins }) {
   const session = createHmac('sha256', pairingCode).update('pi-fold-session-v1').digest('hex');
   const same = (a, b) => typeof a === 'string' && Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a), Buffer.from(b));

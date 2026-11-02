@@ -9,3 +9,5 @@ __pycache__/
 *.pem
 *.key
 .DS_Store
+
+firmware/mode-display/mode_artwork.h

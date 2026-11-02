@@ -13,7 +13,7 @@ function settings(value, defaults = false) {
 }
 export function displaySnapshot(input) {
   if (!input || typeof input.client !== 'string' || !/^[a-zA-Z0-9-]{16,80}$/.test(input.client) || !Number.isSafeInteger(input.seq) || input.seq < 1) throw new Error('Invalid display publisher.');
-  if (!modes.has(input.mode) || !(input.person === null || people.has(input.person)) || !statuses.has(input.status) || !['live', 'scripted'].includes(input.engine)) throw new Error('Invalid display activity.');
+  if (!(input.mode === null || modes.has(input.mode)) || !(input.person === null || people.has(input.person)) || !statuses.has(input.status) || !['live', 'scripted'].includes(input.engine)) throw new Error('Invalid display activity.');
   if (!Array.isArray(input.contexts) || input.contexts.length > 50 || input.contexts.some(x => typeof x !== 'string' || x.length > 80)) throw new Error('Invalid display contexts.');
   // Explicit projection: never forward chat, context bodies, tokens or credentials.
   const snapshot = { client: input.client, seq: input.seq, mode: input.mode, person: input.person, status: input.status, engine: input.engine,
