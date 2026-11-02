@@ -6,6 +6,20 @@ This is a walkthrough of my setup. I’m sharing the actual parts and what I did
 
 The linked photos come from the manufacturers and suppliers. They show stock hardware and sample screens; the walkthrough explains what I do with it in Joyride. Click a photo or its caption to find the device. These externally hosted images remain the property of their owners and are not covered by this repository’s MIT license.
 
+## A Raspberry Pi at the center of the whole experiment
+
+**I built and ran this setup on a Raspberry Pi 5. It comfortably managed the connected devices and the agentic work involved in developing and running the experiment.** That is an important part of what I want to share: a small computer was enough to bring this collection of physical interfaces and AI tools together.
+
+The Pi runs the Joyride server, reads the wheel, pedals, buttons and NFC readers through the local adapters, and coordinates updates to the six small displays. It holds the session state and connects the physical controls to the conversation. It also served as the working computer for the coding agent and development tools used to build the system.
+
+The Pi handles that local software and coordination; the AI models are accessed through remote services. In Joyride’s live mode, model responses come through the API. The browser-only demo can run without those calls.
+
+<a href="https://www.raspberrypi.com/products/raspberry-pi-5/"><img src="https://www.raspberrypi.com/app/uploads/2023/09/aa7841cb-421a-4000-8ab9-c77478a4f83b-1024x683.jpg" alt="Raspberry Pi 5 single-board computer" width="360"></a>
+
+[Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/) · Photo: Raspberry Pi.
+
+You can use another suitable computer. The point is that this setup worked on a Raspberry Pi: the physical experiment did not require a large workstation to manage it.
+
 ## A Logitech wheel for my hands, pedals for my feet
 
 I use a **Logitech G29 racing wheel and pedal set**. It gives me a wheel, accelerator, brake, clutch, paddles and buttons in one physical arrangement. My hands and feet can do different things while I stay with the idea I am developing.
@@ -160,13 +174,9 @@ Use objects you already have. Make something from clay, cardboard or wood. Put a
 
 You might want a single control, a room full of objects, or a completely different set of bodily movements. My wheel, screens and printer are one route into the experiment. The interesting part is finding out what your arrangement makes possible for you.
 
-## The computer and the other pieces
+## The hub and phone
 
-A **Raspberry Pi 5** runs my server and local input adapters. An **OWC Thunderbolt Hub (OWCTB4HUB5P)** helps connect the USB inputs. I use a **Google Pixel 10 Pro Fold** as the phone. The earlier interface explored touch with optional tilt and microphone controls; that version remains available through `npm run pilot`.
-
-<a href="https://www.raspberrypi.com/products/raspberry-pi-5/"><img src="https://www.raspberrypi.com/app/uploads/2023/09/aa7841cb-421a-4000-8ab9-c77478a4f83b-1024x683.jpg" alt="Raspberry Pi 5 single-board computer" width="360"></a>
-
-[Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/) · Photo: Raspberry Pi.
+An **OWC Thunderbolt Hub (OWCTB4HUB5P)** helps connect the USB inputs. I use a **Google Pixel 10 Pro Fold** as the phone. The earlier interface explored touch with optional tilt and microphone controls; that version remains available through `npm run pilot`.
 
 <a href="https://www.owc.com/solutions/thunderbolt-hub"><img src="https://media.owcnow.com/image/upload/w_1200,q_70,f_auto/owc-thunderbolt-hub-hero-left_201009_142310_rvfrc2" alt="OWC Thunderbolt Hub showing its front USB ports" width="360"></a>
 
