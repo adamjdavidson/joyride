@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Joyride · interactive demo</title>
+<style>
+:root{--paper:#f2f0e9;--ink:#202b29;--muted:#717971;--line:#d7dbd0;--green:#aee5ae;--accent:#335e4b;--gold:#e8c676;--dark:#172622;--red:#ba5546;--white:#fffef9;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--paper);font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #b89143;outline-offset:3px}button{transition:background .15s,border-color .15s,transform .15s}button:active{transform:translateY(1px)}button,select,input{touch-action:manipulation}h1,h2,h3,p{margin:0}button svg{width:16px;height:16px}button,summary{-webkit-tap-highlight-color:transparent}.mono,.eyebrow,kbd{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:1.8px;font-weight:500}.muted{color:var(--muted)}.shell{max-width:1560px;margin:auto;padding:25px 34px 26px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:13px}.brandmark{width:42px;height:42px;border:1px solid #7a897e;border-radius:50%;display:grid;place-items:center;background:var(--white)}.brandmark svg{width:29px;height:29px}.brand h1{font-size:17px;font-weight:600;letter-spacing:-.5px}.brand .eyebrow{margin-top:5px;color:var(--muted);font-size:9px}.top-actions{display:flex;gap:10px;align-items:center}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:99px;padding:7px 11px;font-size:11px}.pill i,.status-dot{width:6px;height:6px;background:#6c966c;border-radius:50%;display:inline-block}.pill.demo{background:#e8eade}.quiet{background:transparent;border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:11px}.quiet:hover{background:#e5e7de}.project-line{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:16px}.project-line h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(25px,2.5vw,38px);font-weight:normal;letter-spacing:-1.2px;margin-top:7px}.project-line p{font-size:12px;color:var(--muted);line-height:1.6;max-width:440px}.console{background:var(--dark);color:#e6eee1;border-radius:16px;box-shadow:0 10px 25px #17312a16;padding:20px 24px 17px;position:relative;overflow:hidden}.console::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,#43514340,transparent 65%);pointer-events:none}.console-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid #46584a80;padding-bottom:14px}.mode-display{display:flex;align-items:center;gap:17px}.mode-display .eyebrow{color:#9da99c}.mode-display strong{display:block;font-size:25px;font-weight:500;letter-spacing:-.7px;margin-top:3px}.mode-caption{font-size:11px;color:#acb6a7;max-width:260px;line-height:1.5}.status{font-size:11px;display:flex;gap:8px;align-items:center;color:#c6d4bd;white-space:nowrap}.status[data-status=stopped]{color:#ffac92}.status[data-status=stopped] i{background:#e48a72}.status[data-status=working] i{box-shadow:0 0 0 4px #aee5ae12;background:#aee5ae}.gauges{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:13px}.gauge{padding:3px 28px 2px;min-width:0}.gauge+.gauge{border-left:1px solid #46584a70}.gauge-title{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#bdc9b7;font-size:10px;letter-spacing:1.4px;text-transform:uppercase}.gauge-title span:last-child{font-size:9px;letter-spacing:.3px;color:#849680}.dial{width:100%;height:172px;display:block;overflow:visible}.dial .needle{transition:transform .3s cubic-bezier(.2,.8,.2,1)}.dial text{font-family:ui-monospace,monospace;fill:#9aab91;font-size:9px}.dial .value{font-size:29px;font-weight:400;fill:#eef7e7;letter-spacing:-1px}.gauge-name{font-size:14px;text-align:center;font-weight:500;margin-top:-4px;color:#eef4e8}.gauge-reference{min-height:15px;margin-top:4px;text-align:center;font-size:10px;color:#91a28b}.gauge-ends{display:flex;justify-content:space-between;gap:8px;color:#849580;font-size:9px;margin-top:9px}.console-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px;border-top:1px solid #46584a80;padding-top:12px;font-size:10px;color:#99aa91}.console-buttons{display:flex;gap:7px}.console-buttons button{background:#26372e;border:1px solid #4d6050;color:#c8d6be;border-radius:5px;font-size:10px;padding:6px 9px}.console-buttons button:hover{background:#3d5140}.console-buttons button.held{background:var(--gold);color:#25322a}kbd{font-size:9px;opacity:.75;margin-right:4px}.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 318px;gap:22px;margin-top:22px;align-items:start}.workspace{background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden}.workspace-bar{padding:15px 21px;border-bottom:1px solid #e5e7de;display:flex;align-items:center;justify-content:space-between;gap:8px}.mode-tabs{display:flex;gap:4px;flex-wrap:wrap}.mode-tabs button{border:0;border-radius:5px;padding:7px 9px;background:transparent;color:var(--muted);font-size:11px}.mode-tabs button.active{background:#e5ecdf;color:#2b4c39}.mode-tabs button:hover{background:#edf0e6}.workspace-bar .eyebrow{font-size:9px;color:#90978d}.conversation{height:335px;overflow-y:auto;padding:24px 29px;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#ccd4c5 transparent}.message{margin-bottom:24px}.message:last-child{margin-bottom:0}.message-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:9px;letter-spacing:1.3px;text-transform:uppercase;color:#818b7c;margin-bottom:9px}.message-head span{display:flex;align-items:center;gap:7px}.avatar{height:20px;width:20px;border-radius:50%;display:inline-grid!important;place-items:center;background:#dfe9d8;color:#3b6149;font-size:8px;letter-spacing:0}.message.user{border-left:2px solid #d7dfcb;padding-left:15px}.message.user .body{font-family:Georgia,serif;font-size:20px;line-height:1.5;color:#53604c}.message.assistant .body{font-size:14px;line-height:1.85;color:#35422f;white-space:pre-wrap}.message .annotation{font-size:10px;color:#87917e;margin-top:9px}.message.current .body.streaming::after{content:"";display:inline-block;width:5px;height:14px;background:#5b7b48;margin-left:3px;vertical-align:-2px;animation:blink 1s steps(2) infinite}@keyframes blink{50%{opacity:0}}.message-tools{display:flex;gap:8px;margin-top:11px}.message-tools button{border:0;background:#eef1e7;color:#557144;font-size:10px;padding:6px 9px;border-radius:4px}.working-indicator{font-size:11px;color:#8d977f;margin:8px 0;min-height:18px}.context-strip{border-top:1px solid #e7e9e1;background:#f8f9f2;padding:10px 20px;display:flex;gap:7px;align-items:center;flex-wrap:wrap;min-height:44px}.context-strip .eyebrow{font-size:8px;color:#8a9383;margin-right:4px}.context-tag{font-size:9px;border:1px solid #cbd7be;background:#edf3e5;color:#4b653a;border-radius:4px;padding:4px 6px}.base-tag{font-size:9px;color:#939c8b}.composer{padding:12px 20px;display:flex;align-items:center;gap:10px;border-top:1px solid #e5e7de}.composer p{flex:1;font-size:11px;line-height:1.5;color:#7d8874}.primary{background:#355d42;border:1px solid #355d42;border-radius:6px;color:#f2f6ec;font-size:11px;padding:9px 14px;white-space:nowrap}.primary:hover{background:#254931}.stop-button{background:#fcf4ee;border:1px solid #e0c7b8;color:#9a5140;border-radius:6px;padding:9px 12px;font-size:11px}.side-section{margin-bottom:20px}.section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-title h3{font-size:10px;letter-spacing:1.6px;font-weight:500;text-transform:uppercase}.section-title small{font-size:10px;color:#87907e}.people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.person{background:#faf9f2;border:1px solid #d7dccf;border-radius:7px;min-height:77px;padding:9px 5px;text-align:center}.person:hover{border-color:#768b67;background:#eaf0e1}.person.active{border-color:#557540;background:#dfead1;box-shadow:inset 0 0 0 1px #557540}.person-icon{width:29px;height:29px;border-radius:50%;background:#e7e7db;color:#647055;display:grid;place-items:center;margin:0 auto 6px;font-family:Georgia,serif;font-style:italic;font-size:14px}.person:nth-child(2) .person-icon{background:#e1e7d7}.person:nth-child(3) .person-icon{background:#eae1d2}.person:nth-child(4) .person-icon{background:#dfded4}.person:nth-child(5) .person-icon{background:#e7dbce}.person:nth-child(6) .person-icon{background:#d9e4dc}.person-name{font-size:10px;display:block;line-height:1.3}.person-role{font-size:8px;color:#8b917e;display:block;margin-top:2px}.return-person{width:100%;margin-top:7px;font-size:10px;padding:8px;background:#e2ead7;border:1px solid #c4d1b6;border-radius:5px;color:#456137}.bookshelf{display:grid;gap:6px}.book{border:1px solid #d7dccf;border-left:4px solid var(--book,#b5c59d);border-radius:4px;background:#fafaf4;padding:9px 10px;display:flex;align-items:center;gap:10px;text-align:left}.book:hover{background:#ecf0e4;border-color:#a4b893}.book.active{background:#e7efdd;border-color:#9db786;border-left-color:var(--book,#718d53)}.book-text{flex:1;min-width:0}.book strong{font-size:11px;font-weight:500;display:block}.book small{display:block;font-size:9px;color:#8b947f;margin-top:3px}.book .book-mark{font-family:ui-monospace,monospace;font-size:14px;color:#859474}.shelf-actions{display:flex;gap:7px;margin-top:9px}.shelf-actions button{flex:1;font-size:9px;padding:7px;background:transparent;border:1px solid #cbd2bf;border-radius:5px;color:#68775b}.shelf-actions button.active{background:#eadcba;color:#6c542a;border-color:#c0a16a}.remove-banner{font-size:11px;background:#ede0bd;color:#70582d;padding:10px;border-radius:5px;line-height:1.5;margin-top:8px}.controller{margin-top:18px;border:1px solid var(--line);border-radius:9px;background:#eaece2;overflow:hidden}.controller summary{font-size:10px;cursor:pointer;padding:11px 14px;color:#68765d;letter-spacing:.2px}.control-grid{padding:0 15px 12px;display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;gap:20px}.physical label{display:flex;justify-content:space-between;font-size:10px;color:#66775a;margin-bottom:9px;gap:8px}.physical input[type=range]{width:100%;height:19px;margin:0;accent-color:#587c43;cursor:pointer;touch-action:none}.physical small{display:block;font-size:9px;line-height:1.5;color:#909984;margin-top:3px}.paddles{display:flex;gap:7px;margin-top:5px}.paddles button{flex:1;border:1px solid #bdc9b1;border-radius:4px;background:#f4f5ed;font-size:10px;padding:5px}.direct-steps{display:flex;gap:4px;margin-top:6px}.direct-steps button{border:1px solid #cbd4bf;background:transparent;border-radius:3px;font-size:9px;padding:3px 7px}.direct-steps button.active{background:#45683a;color:#f1f6e9}.transport{display:flex;align-items:center;gap:16px;border-top:1px solid #d5dbc9;margin-top:22px;padding-top:16px}.transport-main{display:flex;align-items:center;gap:8px}.transport button{border:1px solid #c5cebb;background:#f8f8f1;border-radius:50%;height:34px;width:34px;font-size:13px;display:grid;place-items:center}.transport button.play{background:#355d42;color:#edf4e5;border-color:#355d42;width:40px;height:40px}.tour-text{flex:1}.tour-text strong{font-size:11px;font-weight:500;display:block}.tour-text p{font-size:10px;color:#89917f;margin-top:3px}.tour-tabs{display:flex;gap:4px}.tour-tabs button{width:auto;height:auto;border-radius:4px;font-size:9px;padding:6px 9px}.tour-tabs button.active{background:#dde6d1;border-color:#b3c4a0}.tour-progress{height:2px;flex:0 0 100px;background:#d7dfcd}.tour-progress i{height:100%;display:block;background:#64814d;transition:width .3s}.foot{display:flex;justify-content:space-between;gap:15px;margin-top:13px;font-size:9px;line-height:1.5;color:#8c9482}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#294633;color:#edf4e6;padding:11px 19px;border:1px solid #637b53;border-radius:7px;box-shadow:0 8px 25px #1e30252a;font-size:12px;z-index:20;max-width:90vw;text-align:center;pointer-events:none}.toast[hidden]{display:none}.visually-hidden{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.hidden,[hidden]{display:none!important}dialog{border:1px solid #c9d3be;border-radius:12px;padding:25px;background:#fafbf4;color:#293824;max-width:620px;width:calc(100% - 40px);max-height:85vh;box-shadow:0 20px 80px #10271d55}dialog::backdrop{background:#12221d88;backdrop-filter:blur(4px)}dialog h2{font-family:Georgia,serif;font-weight:400;font-size:26px;margin-bottom:12px}dialog p{font-size:12px;line-height:1.7;color:#78856b;margin-bottom:15px}dialog .dialog-head{display:flex;justify-content:space-between;align-items:start}dialog button.close{background:none;border:0;font-size:20px}dialog label{font-size:11px;display:block;margin-bottom:6px}dialog input[type=text],dialog select{border:1px solid #bdcbb0;background:white;border-radius:4px;width:100%;padding:9px;font-size:12px;color:#33482c}dialog .row{display:flex;gap:8px;align-items:center;margin:10px 0}.mapping-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}.mapping-list button{border:1px solid #cad4bd;background:#edf1e5;border-radius:5px;padding:8px;text-align:left;font-size:10px}.hardware-state{font-size:11px;padding:10px;background:#e8eee0;border-radius:5px;line-height:1.8;margin:10px 0}.card-preview{font-size:12px;line-height:1.8;border-left:3px solid #a5ba89;padding-left:13px;white-space:pre-wrap;max-height:190px;overflow:auto;margin:12px 0}a{color:inherit}.hardware-state span{display:block}.notice{font-size:10px;color:#8c7760}#hardwareMessage{min-height:30px}.capture-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.capture-actions button{padding:9px 12px}.stopped .console{box-shadow:0 0 0 2px #bd745a}.stopped .console-head{border-color:#905b4580}.stopped .conversation{scroll-behavior:auto}.simulated-tasks{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.simulated-tasks span{font-size:9px;border:1px solid #d8dfcc;border-radius:4px;padding:5px 7px;background:#f1f4e9;color:#70855c}
+@media(min-width:1001px){.shell{padding:18px 28px}.topbar{margin-bottom:16px}.project-line{margin-bottom:12px}.project-line h2{font-size:31px}.console{padding:14px 20px 12px}.console-head{padding-bottom:10px}.mode-display strong{font-size:22px}.gauges{margin-top:8px}.dial{height:145px}.gauge-ends{margin-top:6px}.console-footer{margin-top:10px;padding-top:9px}.main-grid{margin-top:16px}.workspace-bar{padding:10px 16px}.conversation{height:235px;padding:18px 24px}.context-strip{padding:7px 16px;min-height:36px}.composer{padding:9px 16px}.person{min-height:65px;padding:6px 5px}.person-icon{height:25px;width:25px;margin-bottom:4px}.book{padding:7px 9px}.section-title{margin-bottom:8px}.side-section{margin-bottom:14px}.controller{margin-top:12px}.control-grid{padding-bottom:10px}.transport{margin-top:14px;padding-top:12px}.foot{margin-top:9px}}
+@media(max-width:1000px){.shell{padding:20px}.main-grid{grid-template-columns:minmax(0,1fr) 270px;gap:16px}.gauge{padding-inline:12px}.mode-caption{max-width:200px}.gauge-title{letter-spacing:.6px}.tour-progress{display:none}.conversation{padding:20px;height:360px}.top-actions .pill.demo{display:none}}
+@media(max-width:760px){.shell{padding:15px}.topbar{margin-bottom:20px;flex-wrap:wrap;gap:12px}.top-actions{gap:5px;margin-left:auto}.brandmark{width:33px;height:33px}.brand h1{font-size:14px}.brand .eyebrow{font-size:8px}.project-line{align-items:start}.project-line p{max-width:200px;font-size:10px}.project-line h2{font-size:29px}.console{padding:16px 12px}.mode-caption{display:none}.mode-display strong{font-size:22px}.console-head{padding-bottom:10px}.gauges{margin-top:13px}.gauge{padding-inline:7px}.gauge-title{font-size:8px;letter-spacing:.5px}.gauge-title span:last-child{display:none}.dial{height:132px}.gauge-name{font-size:11px}.gauge-reference{font-size:8px}.gauge-ends{font-size:8px}.console-footer{flex-wrap:wrap;font-size:9px}.main-grid{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:18px}.conversation{height:330px}.control-grid{grid-template-columns:1fr 1fr;gap:15px}.transport{gap:10px;flex-wrap:wrap}.tour-text{min-width:160px}.tour-tabs{margin-left:auto}.foot{flex-wrap:wrap}.workspace-bar{padding:12px}.workspace-bar .eyebrow{display:none}}
+@media(max-width:420px){.shell{padding:12px}.top-actions .quiet{padding:7px;font-size:10px}.top-actions .reset-label{display:none}.project-line{display:block}.project-line p{max-width:none;margin-top:7px}.dial{height:115px}.gauge-name{font-size:10px}.gauge-reference{min-height:24px}.gauge-ends{font-size:7px;gap:3px}.sidebar{grid-template-columns:1fr}.side-section{margin-bottom:4px}.people{grid-template-columns:repeat(3,1fr)}.mode-tabs button{padding:7px;font-size:10px}.composer{padding:12px}.composer p{font-size:10px}.conversation{padding:20px 16px}.console-footer{gap:8px}.brand .eyebrow{letter-spacing:1px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+[hidden]{display:none!important}
+/* The main monitor can be devoted to the conversation while hardware stays live. */
+body[data-view="text"] .project-line,body[data-view="text"] .console,
+body[data-view="text"] .sidebar,body[data-view="text"] .workspace-bar,
+body[data-view="text"] .context-strip,body[data-view="text"] .controller,
+body[data-view="text"] .transport,body[data-view="text"] .foot,
+body[data-view="text"] #startDemo,body[data-view="text"] #hardwareOpen,
+body[data-view="text"] #reset,body[data-view="text"] .message .annotation,
+body[data-view="text"] .brandmark,body[data-view="text"] .brand .eyebrow{display:none}
+body[data-view="text"]{background:#fff;color:#0d0d0d;--ink:#0d0d0d;--muted:#707070;--line:#e5e5e5}
+body[data-view="text"] .shell{height:100dvh;min-height:480px;max-width:none;padding:16px 24px 12px;display:flex;flex-direction:column}
+body[data-view="text"] .topbar{flex:none;margin-bottom:12px;gap:12px}
+body[data-view="text"] .brand h1{font-size:20px;font-weight:600;letter-spacing:-.5px}
+body[data-view="text"] .top-actions{flex-wrap:wrap;justify-content:flex-end}
+body[data-view="text"] .quiet{border-color:transparent;border-radius:20px;font-size:12px;padding:9px 13px;color:#555}
+body[data-view="text"] .quiet:hover{background:#f5f5f5}
+body[data-view="text"] #viewToggle{border-color:#dedede;color:#0d0d0d}
+body[data-view="text"] #engineBadge{background:transparent;border:0;color:#777;font-size:11px}
+body[data-view="text"] .main-grid{display:flex;flex:1;min-height:0;margin:0;align-items:stretch}
+body[data-view="text"] .main-grid>div{display:flex;flex:1;min-width:0;min-height:0}
+body[data-view="text"] .workspace{display:flex;flex-direction:column;flex:1;min-height:0;border:0;border-radius:0;background:#fff}
+body[data-view="text"] .conversation{height:auto;min-height:0;flex:1;padding:36px max(16px,calc((100% - 768px)/2)) 24px;scrollbar-color:#d9d9d9 transparent}
+body[data-view="text"] .conversation:empty::before{content:"What's on your mind?";display:block;margin-top:clamp(40px,18vh,180px);text-align:center;font-size:28px;font-weight:500;letter-spacing:-.7px}
+body[data-view="text"] .message{margin-bottom:36px;overflow-wrap:anywhere}
+body[data-view="text"] .message-head{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:#777;margin-bottom:12px}
+body[data-view="text"] .message-head>span:last-child,body[data-view="text"] .message-head .avatar,body[data-view="text"] .message.user .message-head{display:none!important}
+body[data-view="text"] .message.assistant .body{font-size:16px;line-height:1.8;color:#0d0d0d}
+body[data-view="text"] .message.user{width:fit-content;max-width:85%;margin-left:auto;padding:12px 20px;border:0;border-radius:24px;background:#f4f4f4}
+body[data-view="text"] .message.user .body{font-family:inherit;font-size:16px;line-height:1.65;color:#0d0d0d;white-space:pre-wrap}
+body[data-view="text"] .message-tools button{background:transparent;color:#777;font-size:11px;padding:6px 0}
+body[data-view="text"] .message-tools button:hover{color:#0d0d0d}
+body[data-view="text"] .composer,body[data-view="text"] #liveComposer{flex:none;width:100%;max-width:800px;align-self:center}
+body[data-view="text"] .composer{border:0;padding:8px 16px 0;justify-content:flex-end;gap:8px}
+body[data-view="text"] #composerHint{display:none}
+body[data-view="text"] .composer button{background:transparent;color:#666;border:1px solid transparent;border-radius:20px;font-size:12px;padding:7px 12px}
+body[data-view="text"] .composer button:hover{background:#f4f4f4;color:#0d0d0d}
+body[data-view="text"].stopped #stop{background:#f4f4f4;color:#0d0d0d;border-color:#ddd}
+body[data-view="text"] #liveComposer{padding:8px 16px 0;border:0}
+body[data-view="text"] #liveComposer>label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+body[data-view="text"] .live-entry{background:#f4f4f4;border:1px solid #eee;border-radius:28px;padding:16px;display:flex;align-items:flex-end;gap:12px}
+body[data-view="text"] #liveInput{flex:1;min-width:0;min-height:52px;max-height:180px;margin:0;padding:0 2px;border:0;border-radius:0;background:transparent;color:#0d0d0d;resize:none;line-height:1.6;outline:none}
+body[data-view="text"] .live-entry:focus-within{border-color:#ccc}
+body[data-view="text"] #liveInput::placeholder{color:#777}
+body[data-view="text"] #liveSend{display:grid;place-items:center;flex:none;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#0d0d0d;color:white}
+.send-icon{display:none}
+body[data-view="text"] #liveSend .send-label{display:none}
+body[data-view="text"] #liveSend .send-icon{display:block;width:20px;height:20px}
+body[data-view="text"] #liveBudget,body[data-view="text"] .live-note{display:none}
+body[data-view="text"] #liveError:empty{display:none}
+body[data-view="text"] #liveError{margin:8px 4px 0}
+body[data-view="text"] button:focus-visible{outline:2px solid #555;outline-offset:3px}
+#liveComposer{padding:14px 20px;border-top:1px solid #e5e7de}
+#liveInput{display:block;width:100%;margin:8px 0;padding:10px;border:1px solid #cbd7be;border-radius:6px;background:#fafbf5;color:#35422f;font:inherit;resize:vertical}
+@media(max-width:640px){body[data-view="text"] .shell{padding:12px 8px 8px}body[data-view="text"] .topbar{align-items:center;flex-wrap:wrap;padding:0 8px}body[data-view="text"] .brand h1{font-size:17px}body[data-view="text"] .top-actions{gap:4px}body[data-view="text"] .conversation{padding:24px 16px}body[data-view="text"] #liveComposer{padding:8px 8px 0}body[data-view="text"] .composer{padding-right:8px}body[data-view="text"] .message.user{max-width:90%}}
+</style>
+</head>
+<body data-view="instruments">
+<script>
+try { if(localStorage.getItem('instrument-screen-view')==='text')document.body.dataset.view='text'; } catch {}
+</script>
+<div class="shell">
+ <header class="topbar">
+  <div class="brand"><div class="brandmark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="3"/><path d="M7 16h26M18 23l-5 9m9-9 5 9"/></svg></div><div><h1>Joyride</h1><div class="eyebrow">A conversation you can steer</div></div></div>
+  <div class="top-actions"><span class="pill demo" id="engineBadge">● Scripted demo</span><button class="quiet" id="liveToggle">Use live AI</button><button class="quiet" id="viewToggle" aria-expanded="false" aria-controls="instrumentPanel instrumentSidebar modeTabs activeContexts screenControls">Show instruments</button><button class="primary" id="startDemo">▶ Play demo</button><button class="quiet" id="hardwareOpen">Connect controls</button><button class="quiet" id="reset" title="Reset this demo">↺ <span class="reset-label">Reset</span></button></div>
+ </header>
+ <section class="project-line"><div><div class="eyebrow muted">On the desk / Project 01</div><h2>A conversation you can steer.</h2></div><p id="projectDescription">An initial experiment in steering a conversation. Try the prepared responses, then make it your own.</p></section>
+ <section class="console" id="instrumentPanel" aria-label="Instrument panel">
+  <div class="console-head"><div class="mode-display"><div><div class="eyebrow" id="modeEyebrow">Current activity</div><strong id="modeName">Download</strong></div><p class="mode-caption" id="modeDescription">Put a little structure around what’s on your mind.</p></div><div class="status" id="status" data-status="ready" role="status"><i class="status-dot"></i><span id="statusText">Ready when you are</span></div></div>
+  <div class="gauges">
+   <div class="gauge"><div class="gauge-title"><span>Creative reach</span><span>Steering wheel</span></div><svg class="dial" id="wildDial" viewBox="0 0 260 205" role="img" aria-label="Wildness gauge"></svg><div class="gauge-name" id="wildName">Current normal</div><div class="gauge-reference" id="wildReference">Default · current normal</div><div class="gauge-ends"><span>CONVENTIONAL</span><span>WILD</span></div></div>
+   <div class="gauge"><div class="gauge-title"><span>Deliberation / speed</span><span>Brake + gas</span></div><svg class="dial" id="speedDial" viewBox="0 0 260 205" role="img" aria-label="Speed gauge"></svg><div class="gauge-name" id="speedName">Conversational</div><div class="gauge-reference" id="speedReference">Default · 3</div><div class="gauge-ends"><span>THOUGHTFUL</span><span>IMMEDIATE</span></div></div>
+   <div class="gauge"><div class="gauge-title"><span>Initiative</span><span>Clutch</span></div><svg class="dial" id="initiativeDial" viewBox="0 0 260 205" role="img" aria-label="Initiative gauge"></svg><div class="gauge-name" id="initiativeName">Contribute</div><div class="gauge-reference" id="initiativeReference">Default · 3</div><div class="gauge-ends"><span>FOLLOW ME</span><span>TAKE CHARGE</span></div></div>
+  </div>
+  <div class="console-footer"><span id="settingSummary">Feet off. Your normal, ready to explore.</span><div class="console-buttons"><button id="saveDefaults" title="Capture all current settings as new defaults"><kbd>L2</kbd> Set cruise</button><button id="factoryHold" title="Hold to use the original defaults"><kbd>L3</kbd> Hold for default</button></div></div>
+ </section>
+ <main class="main-grid">
+  <div>
+   <section class="workspace" aria-label="Conversation">
+    <div class="workspace-bar"><nav class="mode-tabs" id="modeTabs" aria-label="Choose activity"></nav><span class="eyebrow">Your workspace</span></div>
+    <div class="conversation" id="conversation" tabindex="0" aria-label="Scripted conversation"></div>
+    <div class="context-strip" id="activeContexts"></div>
+    <div id="liveComposer" hidden><label for="liveInput" class="eyebrow">What's on your mind?</label><div class="live-entry"><textarea id="liveInput" maxlength="16000" rows="2" placeholder="What's on your mind?" aria-description="Enter to send; Shift+Enter for a new line."></textarea><button class="primary" id="liveSend" aria-label="Send thought" title="Send thought"><span class="send-label">Send thought ↗</span><svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></div><p id="liveBudget" class="muted" style="font-size:10px;margin-top:9px"></p><p id="liveError" role="alert" style="font-size:12px;color:#9a5140;margin-top:8px"></p><p class="muted live-note" style="font-size:10px;margin-top:7px">Text generation only · no browsing or file execution yet · reload clears this conversation</p></div>
+    <div class="composer"><p id="composerHint">Follow the walkthrough, or choose an activity and steer.</p><button class="stop-button" id="stop">■ Stop</button><button class="primary" id="continue">Continue ↗</button></div>
+   </section>
+   <details class="controller" id="screenControls" open><summary>On-screen controls <span class="muted">· release to return · arrows paddle · space stops</span></summary><div class="control-grid">
+    <div class="physical"><label for="wheel">Steering wheel <span id="wheelReadout">centered</span></label><input id="wheel" type="range" min="-1" max="1" step=".01" value="0" aria-label="Steering wheel"><div class="paddles"><button id="paddleLeft" title="One step more conventional">‹ Left paddle</button><button id="paddleRight" title="One step wilder">Right paddle ›</button></div><small>Hold a turn, or click a paddle.</small></div>
+    <div class="physical"><label for="gas">Accelerator <span id="gasReadout">0%</span></label><input id="gas" type="range" min="0" max="1" step=".01" value="0" aria-label="Accelerator"><small>Press for speed. Tap to resume after a stop.</small></div>
+    <div class="physical"><label for="brake">Brake <span id="brakeReadout">0%</span></label><input id="brake" type="range" min="0" max="1" step=".01" value="0" aria-label="Brake"><small>Slow down → think deeply → stop.</small></div>
+    <div class="physical"><label for="clutch">Clutch <span id="clutchReadout">0%</span></label><input id="clutch" type="range" min="0" max="1" step=".01" value="0" aria-label="Clutch initiative"><div class="direct-steps" id="initiativeSteps" aria-label="Choose initiative directly"></div><small>Adjustable degrees of independence.</small></div>
+   </div></details>
+  </div>
+  <aside class="sidebar" id="instrumentSidebar">
+   <section class="side-section"><div class="section-title"><h3>Invite a perspective</h3><small>Step aside together</small></div><div class="people" id="people"></div><button class="return-person" id="leavePerson" hidden>← Return to Download</button></section>
+   <section class="side-section"><div class="section-title"><h3>Your context bookshelf</h3><small id="shelfCount">5 cards</small></div><div class="bookshelf" id="bookshelf"></div><div class="shelf-actions"><button id="clearContexts"><kbd>R1</kbd> Clear cards</button><button id="removeNext"><kbd>R2</kbd> Remove next</button></div><div class="remove-banner" id="removeBanner" hidden>Tap a context card to remove it. <button class="quiet" id="cancelRemove">Cancel</button></div></section>
+  </aside>
+ </main>
+ <section class="transport" aria-label="Guided demo"><div class="transport-main"><button id="tourBack" title="Previous scene">‹</button><button class="play" id="tourPlay" title="Play walkthrough" aria-label="Play walkthrough">▶</button><button id="tourNext" title="Next scene">›</button></div><div class="tour-text"><strong id="tourTitle">Feel the instrument</strong><p id="tourDescription">A guided journey from a loose thought to a new possibility.</p></div><div class="tour-progress"><i id="tourProgress" style="width:0"></i></div><nav class="tour-tabs" id="tourTabs" aria-label="Walkthroughs"></nav></section>
+ <footer class="foot"><span id="connectionLabel">On-screen controls · no AI calls · local session</span><span id="displayConnection">Mode display · connecting</span><span id="engineFootnote">Scripted responses & illustrative context · changes reset on reload</span></footer>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+<dialog id="hardwareDialog"><div class="dialog-head"><h2>Connect your instrument</h2><button class="close" data-close="hardwareDialog" aria-label="Close">×</button></div><p>Optional input adapters can connect a wheel and card readers on your computer. The demo reads their inputs; it does not change the device profiles or write to cards. Mappings last for this page session.</p><button class="primary" id="connectHardware">Connect wheel & readers</button><button class="quiet" id="disconnectHardware">Disconnect</button><div class="hardware-state"><span id="wheelStatus">Wheel · not connected</span><span id="nfcStatus">Readers · not connected</span></div><h3 class="eyebrow">Map the wheel buttons</h3><p>Choose a function below, then press the matching physical button. The paddles work the same way.</p><div class="mapping-list" id="buttonMappings"></div><div id="hardwareMessage" class="notice" role="status"></div><h3 class="eyebrow">Assign a card</h3><p>Present a card to either reader. Choose what it represents here, then lift and present it again to activate it. Perspective removal ends a visit; context removal leaves it active.</p><label for="cardTarget">Card meaning</label><select id="cardTarget"></select><div class="row"><button class="primary" id="bindCard" disabled>Assign last detected card</button><small id="lastCard" class="muted">No card detected</small></div></dialog>
+<dialog id="captureDialog"><div class="dialog-head"><h2>Put this on your bookshelf.</h2><button class="close" data-close="captureDialog" aria-label="Close">×</button></div><p>Keep this piece of the conversation as reusable context. This demo shelf lasts until you reload; you can download the item to keep it.</p><label for="contextTitle">Give it a name</label><input type="text" id="contextTitle" maxlength="65" value="A physical thinking instrument"><div class="card-preview" id="capturePreview"></div><div class="capture-actions"><button class="quiet" id="downloadContext">Download context</button><button class="primary" id="saveContext">Add to bookshelf</button></div></dialog>
+<script src="joyride-config.js"></script>
+<script src="instrument-live.js"></script>
+<script src="instrument-displays.js"></script>
+<script>
+/* Throwaway scripted interaction prototype. Question: do modes, visits, context cards,
+   spring-return controls and saved defaults form a legible, playable instrument?
+   Live requests are handled by instrument-live.js; only the screen-view preference persists here. */
+const config=globalThis.JoyrideConfig;
+const reach=(config.creative.labels.length-1)/2;
+const Instrument = (() => {
+ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const initial=()=>({mode:config.defaults.mode,person:null,defaults:{wild:config.defaults.wild,speed:config.defaults.speed,initiative:config.defaults.initiative},axes:{wheel:0,gas:0,brake:0,clutch:0},captured:[],paddle:0,initiativeChoice:null,factory:false,stopped:false,resumePending:false,contexts:[],removeNext:false});
+ function values(s){
+  const base=s.factory?config.defaults:s.defaults;
+  const axis=k=>s.captured.includes(k)?0:s.axes[k];
+  const offset=s.factory?0:clamp(Math.round(axis('wheel')*reach)+s.paddle,-reach,reach);
+  let speed=base.speed, initiative=s.initiativeChoice??base.initiative;
+  if(!s.factory){
+   if(axis('brake')>.06) speed=clamp(base.speed-(axis('brake')>.38?2:1),1,config.speed.length);
+   else if(axis('gas')>.06&&!s.resumePending) speed=clamp(base.speed+(axis('gas')>.5?2:1),1,config.speed.length);
+   if(axis('clutch')>.06) initiative=clamp(Math.ceil(axis('clutch')*config.initiative.length),1,config.initiative.length);
+  } else initiative=config.defaults.initiative;
+  return {wild:base.wild+offset,offset,speed,initiative,base};
+ }
+ function reduce(s,a){
+  const n={...s,axes:{...s.axes},defaults:{...s.defaults},captured:[...s.captured],contexts:[...s.contexts]};
+  switch(a.type){
+   case 'MODE':if(!Object.hasOwn(config.activities,a.value))return s;n.mode=a.value;n.person=null;break;
+   case 'PERSON':if(a.value!==null&&!Object.hasOwn(config.perspectives,a.value))return s;n.person=a.value;break;
+   case 'AXIS':{
+    const old=n.axes[a.key];n.axes[a.key]=a.value;
+    if(Math.abs(a.value)<.06)n.captured=n.captured.filter(k=>k!==a.key);
+    if(a.key==='wheel'&&Math.abs(old-a.value)>.015)n.paddle=0;
+    if(a.key==='clutch'&&Math.abs(old-a.value)>.015)n.initiativeChoice=null;
+    if(a.key==='brake'&&a.value>=.78){n.stopped=true;n.resumePending=false;}
+    if(a.key==='gas'){
+     if(old<=.06&&a.value>.06&&n.stopped&&n.axes.brake<.78)n.resumePending=true;
+     if(a.value<=.06&&n.resumePending&&n.axes.brake<.78){n.stopped=false;n.resumePending=false;}
+    }
+    break;
+   }
+   case 'PADDLE':n.paddle=clamp(values(s).offset+a.value,-reach,reach);n.captured=[...new Set([...n.captured,'wheel'])];break;
+   case 'INITIATIVE':n.initiativeChoice=clamp(a.value,1,config.initiative.length);break;
+   case 'SAVE':{const v=values(s);n.defaults={wild:v.wild,speed:v.speed,initiative:v.initiative};n.paddle=0;n.initiativeChoice=null;n.captured=Object.keys(n.axes).filter(k=>Math.abs(n.axes[k])>.06);break;}
+   case 'FACTORY':n.factory=a.value;break;
+   case 'STOP':n.stopped=true;n.resumePending=false;break;
+   case 'RESUME':if(n.axes.brake<.78){n.stopped=false;n.resumePending=false;}break;
+   case 'RELEASE':n.axes={wheel:0,gas:0,brake:0,clutch:0};n.captured=[];n.factory=false;n.resumePending=false;n.paddle=0;n.initiativeChoice=null;break;
+   case 'CONTEXT':if(n.removeNext){n.contexts=n.contexts.filter(x=>x!==a.value);n.removeNext=false;}else if(!n.contexts.includes(a.value))n.contexts.push(a.value);break;
+   case 'CLEAR':n.contexts=[];n.removeNext=false;break;
+   case 'ARM_REMOVE':n.removeNext=!n.removeNext;break;
+   case 'RESET':return initial();
+  }
+  return n;
+ }
+ return {initial,values,reduce,clamp};
+})();
+const $=id=>document.getElementById(id);
+const modes=Object.fromEntries(Object.entries(config.activities).map(([id,value])=>[id,value.description]));
+const people=config.perspectives;
+const wildNames=config.creative.labels;
+const speedNames=['',...config.speed.map(x=>x.label)];
+const initiativeNames=['',...config.initiative.map(x=>x.label)];
+const originalBooks=[
+ {id:'foo',name:'A thinking harness',type:'Project reference',color:'#9aaf7e',body:'Experimental premise: protect the user’s train of thought; hold the chosen activity; allow independent controls; distinguish what the user decided from what the assistant proposed. Understanding something new can be the result.'},
+ {id:'members',name:'An example audience',type:'Illustrative audience brief',color:'#b9a481',body:'Demo stand-in, not actual membership research: an audience curious about AI that benefits from concrete experiences and a clear invitation to experiment. Replace this sample with your own audience context.'},
+ {id:'decks',name:'Our approach to decks',type:'Illustrative working method',color:'#93aaa2',body:'Demo working method: one idea per slide, concrete situations before abstractions, an experience the audience can participate in, and a final invitation to try something. Not an established organizational policy.'},
+ {id:'brand',name:'Brand guidelines',type:'Illustrative style guide',color:'#c0ad74',body:'Demo style guide: clear language, warm confidence, precise claims, generous space, and visible distinction between a prototype and a live system. Not the organization’s actual brand guidelines.'},
+ {id:'buddhism',name:'Buddhism: attention & attachment',type:'Illustrative research shelf',color:'#a4a5b4',body:'A demonstration reference prompt: explore attention, attachment to a preferred result, and the experience of observing a thought without immediately acting on it. This is a sample lens, not a researched source collection.'}
+];
+let books=originalBooks.map(x=>({...x})),state=Instrument.initial(),messages=[],activeMessage=null,streamTimer=null,steerTimer=null,gasTimer=null,toastTimer=null,autoplayTimer=null,tourPlaying=false,tourKey='feel',tourIndex=-1,hardwareRunning=false,hardwareEpoch=0,learnButton=null,lastCard=null,captureText='',revision=0;
+const buttonBindings=new Map(),cardBindings=new Map(),visitingCards=new Map();
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const say=text=>{clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,2800);};
+const signature=s=>{const v=Instrument.values(s);return JSON.stringify([s.mode,s.person,s.contexts,v.wild,v.initiative,...(Live.enabled?[v.speed]:[])]);};
+const polar=(angle,r)=>({x:130+Math.cos(angle*Math.PI/180)*r,y:112+Math.sin(angle*Math.PI/180)*r});
+function arc(start,end,r){const points=[];for(let a=start;a<=end;a+=2){const p=polar(a,r);points.push(`${p.x.toFixed(2)},${p.y.toFixed(2)}`);}const p=polar(end,r);points.push(`${p.x},${p.y}`);return points.join(' ');}
+function makeDial(id,count,labels,color){
+ let ticks='';for(let i=0;i<=40;i++){const a=135+i*270/40,p=polar(a,87),q=polar(a,i%5?84:80);ticks+=`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="#61755b" stroke-opacity="${i%5?.38:.9}"/>`;}
+ for(let i=0;i<count;i++){const a=135+i*270/(count-1),p=polar(a,103);ticks+=`<text x="${p.x}" y="${p.y+3}" text-anchor="middle">${labels[i]}</text>`;}
+ $(id).innerHTML=`<polyline points="${arc(135,405,75)}" fill="none" stroke="#354b38" stroke-width="5" stroke-linecap="round"/><polyline class="fill-arc" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round"/>${ticks}<g class="default-marker"><path d="M130 14l-4 -7h8z" fill="#d2bd82"/></g><g class="needle"><path d="M127 118l3 -69 3 69z" fill="${color}"/><circle cx="130" cy="112" r="7" fill="#21362a" stroke="${color}" stroke-width="1.5"/><circle cx="130" cy="112" r="2" fill="${color}"/></g><text class="value" x="130" y="168" text-anchor="middle">0</text>`;
+}
+function updateDial(id,value,min,max,base,label){const node=$(id),t=(value-min)/(max-min),b=(base-min)/(max-min);node.querySelector('.needle').style.transform=`rotate(${225+270*t}deg)`;node.querySelector('.needle').style.transformOrigin='130px 112px';node.querySelector('.default-marker').setAttribute('transform',`rotate(${225+270*b} 130 112)`);node.querySelector('.fill-arc').setAttribute('points',arc(135,135+270*t,75));node.querySelector('.value').textContent=label;node.setAttribute('aria-label',`${id.replace('Dial','')}: ${label}`);}
+function render(){
+ const v=Instrument.values(state),person=people[state.person];
+ document.body.classList.toggle('stopped',state.stopped);
+ $('modeEyebrow').textContent=person?`Consultation · return to ${state.mode}`:'Current activity';$('modeName').textContent=person?person.name:state.mode;$('modeDescription').textContent=person?person.description:modes[state.mode];
+ const status=state.stopped?'stopped':activeMessage?'working':'ready';$('status').dataset.status=status;$('statusText').textContent=state.stopped?'Stopped · tap gas to resume':activeMessage?'Working with your idea':'Ready when you are';
+ updateDial('wildDial',v.offset,-reach,reach,0,v.offset>0?`+${v.offset}`:v.offset);updateDial('speedDial',v.speed,1,config.speed.length,v.base.speed,state.stopped?'STOP':v.speed);updateDial('initiativeDial',v.initiative,1,config.initiative.length,v.base.initiative,v.initiative);
+ $('wildName').textContent=wildNames[v.offset+reach];$('wildReference').textContent=`Default · ${v.base.wild===0?'current normal':`${v.base.wild>0?'+':''}${v.base.wild} creative steps`}`;
+ $('speedName').textContent=state.stopped?'Waiting for you':speedNames[v.speed];$('speedReference').textContent=`Default · ${v.base.speed} / ${speedNames[v.base.speed]}`;$('initiativeName').textContent=initiativeNames[v.initiative];$('initiativeReference').textContent=`Default · ${v.base.initiative}`;
+ $('settingSummary').textContent=state.factory?'L3 held · original defaults':state.stopped?'Stopped. Release the brake, then tap the gas.':Object.values(state.axes).some(x=>Math.abs(x)>.06)?'You’re steering · release to return to your defaults':state.paddle?'Paddle adjustment · one step at a time':'Feet off. Your normal, ready to explore.';
+ $('factoryHold').classList.toggle('held',state.factory);
+ for(const key of ['wheel','gas','brake','clutch']){if(document.activeElement!==$(key))$(key).value=state.axes[key];$(`${key}Readout`).textContent=key==='wheel'?(Math.abs(state.axes[key])<.06?'centered':`${Math.round(state.axes[key]*100)}%`):`${Math.round(state.axes[key]*100)}%`;}
+ $('modeTabs').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.mode===state.mode&&!state.person);b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode&&!state.person));});
+ $('people').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',b.dataset.person===state.person);b.setAttribute('aria-pressed',String(b.dataset.person===state.person));});
+ $('leavePerson').hidden=!person;$('leavePerson').textContent=`← Return to ${state.mode}`;
+ $('initiativeSteps').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',Number(b.dataset.level)===v.initiative);b.setAttribute('aria-pressed',String(Number(b.dataset.level)===v.initiative));});
+ $('bookshelf').querySelectorAll('button').forEach(b=>{b.classList.toggle('active',state.contexts.includes(b.dataset.book));b.querySelector('.book-mark').textContent=state.contexts.includes(b.dataset.book)?'✓':'+';b.setAttribute('aria-pressed',String(state.contexts.includes(b.dataset.book)));});
+ $('activeContexts').innerHTML='<span class="eyebrow">On the desk</span><span class="base-tag">Project context</span>'+state.contexts.map(id=>`<span class="context-tag">${escapeHtml(books.find(b=>b.id===id)?.name??id)}</span>`).join('');
+ $('removeNext').classList.toggle('active',state.removeNext);$('removeNext').setAttribute('aria-pressed',String(state.removeNext));$('removeBanner').hidden=!state.removeNext;
+ $('continue').textContent=state.stopped?'Tap gas ↗':'Continue ↗';$('composerHint').textContent=state.stopped?'The activity stays paused until you tap the gas.':person?'A prepared interpretation of this perspective, free to choose its approach.':'Choose a mode, invite someone, or bring a context card to the desk.';
+ $('tourPlay').textContent=tourPlaying?'Ⅱ':'▶';$('tourPlay').setAttribute('aria-label',tourPlaying?'Pause walkthrough':'Play walkthrough');$('startDemo').textContent=tourPlaying?'Ⅱ Pause demo':'▶ Play demo';Live.render();PhysicalDisplays.queue();
+}
+function renderMessages(){
+ const c=$('conversation'),nearBottom=c.scrollHeight-c.scrollTop-c.clientHeight<90;
+ c.innerHTML=messages.map(m=>`<article class="message ${m.role} ${m===activeMessage?'current':''}"><div class="message-head"><span><i class="avatar">${m.role==='user'?'Y':'✳'}</i>${escapeHtml(m.speaker)}</span><span>${escapeHtml(m.tag||'')}</span></div><div class="body ${m===activeMessage&&!state.stopped?'streaming':''}">${escapeHtml(m.shown)}</div>${m.annotation?`<div class="annotation">${escapeHtml(m.annotation)}</div>`:''}${m.role==='assistant'&&m.shown&&m!==activeMessage?`<div class="message-tools"><button data-capture="${m.id}">＋ Make this a context</button></div>`:''}${m.tasks?`<div class="simulated-tasks">${m.tasks.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div>`:''}</article>`).join('');
+ if(nearBottom||activeMessage)c.scrollTop=c.scrollHeight;PhysicalDisplays.queue();
+}
+function scriptedResponse(){
+ const v=Instrument.values(state),has=id=>state.contexts.includes(id);
+ let text='',speaker=state.person?`${people[state.person].name} · perspective`:'Thinking partner',tasks=null;
+ const perspective=Object.fromEntries(Object.entries(people).map(([id,p])=>[id,p.sample||`Prepared illustration: ${p.description} Live AI uses this perspective’s instructions.`]));
+ if(state.person)text=perspective[state.person];
+ else if(!['Download','Expand','Challenge','Structure','Implement'].includes(state.mode))text=config.activities[state.mode].sample||`Prepared illustration: ${modes[state.mode]} Live AI uses this activity’s instructions.`;
+ else if(v.initiative>=5){
+  text=v.initiative===6?'I’ll take this forward as an experience we can demonstrate.\n\nFirst, I’m reframing the task around one visible transformation: an idea that changes when you steer. Then I’ll explore the interaction, challenge the ambiguous parts, and shape a short performance.\n\nHere’s the demonstration outline: begin with a loose thought; steer it toward something unexpected; invite a theatrical perspective; bring in audience context; stop everything with the brake; tap the gas and continue.\n\nThe result to aim for is a moment when someone says: “I understand what that control lets me do.”':'The most useful next move is to compare two experiences.\n\nI’ll move from expansion into a small experiment: show the same idea at normal and ridiculous wildness. Then I’ll use the audience context to shape how we present the contrast.\n\nA research track could investigate where users lose their train of thought; a making track can produce the demonstration. Here is a first outline for those tracks.';
+  tasks=['Illustrated research track','Prepared demo outline','Next experiment'];
+ }else if(state.mode==='Download')text='You want a way to stay with your own thinking while changing the kind of help you get.\n\nWhat you’ve described has three parts: choosing an activity, steering the collaboration, and bringing in people or context when they’re useful.\n\nThe physical controls should make those changes easy without taking you away from the idea.';
+ else if(state.mode==='Expand'){
+  if(v.wild>=3)text='Imagine a weather system for ideas.\n\nTurn right and the room becomes a thunderstorm of unlikely connections. A small thought about a steering wheel becomes a sailing lesson for a committee of ghosts. The scene becomes a stage. Leonardo starts drawing the boat.\n\nThe brake doesn’t make the weather sensible. It gives you a moment to decide which impossible thing is worth following.\n\nWhat if that ridiculous image is the demonstration: you aren’t ordering an answer. You’re learning to navigate a thinking environment?';
+  else if(v.wild>=1)text='What if this feels like playing an instrument with another musician?\n\nThe mode sets the kind of activity. The wheel changes its character. Your feet govern pace and how much the partner takes the lead.\n\nYou could try an unexpected phrase, let the collaborator develop it, and bring the whole exchange to a stop without explaining yourself. The physical gesture becomes part of the conversation.';
+  else if(v.wild<=-2)text='A straightforward version is a conversation interface with clear controls.\n\nChoose a task, set the response style, and supply relevant background. Keep the current settings visible. Use a stop button when you need to interrupt.\n\nDemonstrate each control with a simple before-and-after example.';
+  else text='There may be something here beyond a more convenient interface.\n\nA visible control gives you a move to try before you know the right words. Turn toward something stranger. Ask a familiar person to look at it. Bring a useful piece of context off the shelf.\n\nThe instrument could help you discover ways of thinking as well as express intentions you already have.';
+ }else if(state.mode==='Challenge')text='The strongest question is whether the controls create a dependable difference.\n\nIf “wilder” sometimes means a surprising idea and sometimes just louder language, the wheel will feel arbitrary. And if a visitor silently changes the activity, you may lose the control you came here to gain.\n\nFor the demonstration, make one distinction unmistakable. Let the audience predict what a gesture will do, then experience it.';
+ else if(state.mode==='Structure')text='I’d arrange the demonstration in five beats.\n\n1. A loose thought, expressed without interruption.\n2. One turn of the wheel that opens an unexpected possibility.\n3. A visitor who sees something different in it.\n4. A context card that changes what is relevant.\n5. A stop, a breath, and a deliberate restart.\n\nExplain the controls after people have seen why they want them.';
+ else text='Here is a first demo storyboard.\n\nOPEN: “What if I could steer the collaboration without finding another prompt?”\nACTION: Turn the wheel. The gauge moves and a more surprising direction appears.\nVISIT: Bring in Leonardo da Vinci. The idea becomes a theatrical scene.\nCONTEXT: Add the audience brief. The scene becomes an invitation they can understand.\nCLOSE: Brake. Silence. Tap the gas. Continue where you left off.\n\nEnd with the audience taking the controls.';
+ if(has('members'))text+='\n\nWith the sample audience brief on the desk, I’d give people one familiar situation and let them try a control before introducing the full system.';
+ if(has('decks'))text+='\n\nUsing the deck-method card: one beat per slide, a concrete moment first, and an invitation to try the instrument at the end.';
+ if(has('brand'))text+='\n\nThe sample style guide suggests keeping the language clear and naming this as a demonstration of the intended experience.';
+ if(has('buddhism'))text+='\n\nThe attention card opens another question: can the instrument help you notice a thought without immediately turning it into a task?';
+ if(has('foo'))text+='\n\nThe Foo Camp talk keeps the criterion clear: success can be understanding something new, with nothing to build.';
+ for(const id of state.contexts.filter(x=>x.startsWith('saved-'))){const b=books.find(x=>x.id===id);if(b)text+=`\n\nFrom your saved context, “${b.name}”: ${b.body.slice(0,160)}${b.body.length>160?'…':''}`;}
+ if(v.initiative===1)text=state.mode==='Download'&&!state.person?'You want to steer the collaboration while staying with your thought.':text.split('\n\n')[0];
+ else if(v.initiative===2)text=text.split('\n\n').slice(0,2).join('\n\n');
+ else if(v.initiative===4)text+='\n\nI’ll develop that direction one step further: make the change observable before explaining its mechanism. That gives us a concrete choice to examine together.';
+ return {text,speaker,tasks};
+}
+function startResponse(reason=''){
+ if(Live.enabled){Live.start(reason);return;}
+ clearTimeout(steerTimer);clearTimeout(streamTimer);
+ if(activeMessage){activeMessage.annotation=activeMessage.shown?'Interrupted by your steering.':'Replaced before responding.';activeMessage=null;messages=messages.filter(m=>m.shown);}
+ const r=scriptedResponse(),v=Instrument.values(state);
+ activeMessage={id:++revision,role:'assistant',speaker:r.speaker,tag:reason||state.mode,text:r.text,shown:'',index:0,signature:signature(state),tasks:null,plannedTasks:r.tasks,annotation:`${wildNames[v.offset+reach]} · ${speedNames[v.speed]} · initiative ${v.initiative}`,readyAt:performance.now()+1200/v.speed};
+ messages.push(activeMessage);renderMessages();render();tickStream();
+}
+function tickStream(){
+ clearTimeout(streamTimer);if(!activeMessage)return;
+ if(!state.stopped&&performance.now()>=activeMessage.readyAt){
+  const v=Instrument.values(state);activeMessage.index=Math.min(activeMessage.text.length,activeMessage.index+[0,3,5,8,13,20][v.speed]);activeMessage.shown=activeMessage.text.slice(0,activeMessage.index);
+  if(activeMessage.index>=activeMessage.text.length){activeMessage.tasks=activeMessage.plannedTasks;activeMessage=null;render();}
+  renderMessages();
+ }
+ if(activeMessage)streamTimer=setTimeout(tickStream,32);
+}
+function pauseTour(){tourPlaying=false;clearTimeout(autoplayTimer);render();}
+function dispatch(action,{manual=true,respond=true}={}){
+ if(manual)pauseTour();const before=state,prevSig=signature(state);state=Instrument.reduce(state,action);
+ if(action.type==='AXIS'&&action.key==='gas'){
+  if(state.resumePending&&!before.resumePending){clearTimeout(gasTimer);gasTimer=setTimeout(()=>{if(state.axes.gas>.06)dispatch({type:'RESUME'},{manual:false,respond:false});},420);}
+  if(state.axes.gas<=.06)clearTimeout(gasTimer);
+ }
+ if(action.type==='STOP'||state.stopped){clearTimeout(steerTimer);}
+ if(action.type==='SAVE')say('Cruise set · wildness, speed and initiative saved together');
+ if(action.type==='CLEAR')say('Card contexts cleared · project context stays');
+ if(action.type==='CONTEXT'){const name=books.find(b=>b.id===action.value)?.name||'Context';say(before.removeNext?`${name} removed`:`${name} is on the desk`);}
+ render();
+ if(Live.enabled){Live.controls(before,prevSig,action);return;}
+ if(before.stopped&&!state.stopped){if(activeMessage&&activeMessage.signature!==signature(state))startResponse('Resumed with your settings');else if(activeMessage)tickStream();else if(respond)startResponse('Resumed');}
+ if(respond&&!state.stopped&&prevSig!==signature(state)){
+  clearTimeout(steerTimer);steerTimer=setTimeout(()=>startResponse(state.person?'A visitor joins':action.type==='CONTEXT'?'Context added':'Following your lead'),230);
+ }
+ if(before.stopped!==state.stopped)renderMessages();
+}
+</script>
+<script>
+const tours={
+ feel:{name:'Feel the instrument',description:'From a loose thought to a surprising possibility.',steps:[
+  {title:'Start with what’s on your mind',note:'Download adds just enough structure.',actions:[{type:'MODE',value:'Download'}]},
+  {title:'Open up the idea',note:'Expand changes the activity; your controls stay put.',actions:[{type:'MODE',value:'Expand'}]},
+  {title:'Turn toward the ridiculous',note:'The wheel moves three steps right. The idea changes character.',actions:[{type:'AXIS',key:'wheel',value:1}]},
+  {title:'Make this your new normal',note:'L2 captures the setting. Recenter; the new baseline stays.',actions:[{type:'SAVE'},{type:'AXIS',key:'wheel',value:0}]},
+  {title:'Step aside with Leonardo',note:'An inventive perspective, free to choose its own approach.',actions:[{type:'PERSON',value:'leonardo'}]},
+  {title:'Bring the audience into view',note:'A context card joins the desk and stays after you lift it.',actions:[{type:'CONTEXT',value:'members'}]},
+  {title:'Stop. Take a breath.',note:'Firm braking stops output. Lifting your foot leaves it stopped.',actions:[{type:'STOP'}]},
+  {title:'Tap the gas and return',note:'Resume, then leave the visit. Expand and your saved settings remain.',actions:[{type:'RESUME'},{type:'PERSON',value:null}]}
+ ]},
+ shelf:{name:'Build a bookshelf',description:'Add context, remove it deliberately, and save something useful.',steps:[
+  {title:'Shape the demonstration',note:'Structure gives us a sequence to work with.',actions:[{type:'MODE',value:'Structure'}]},
+  {title:'Pick up a working method',note:'The deck card adds a reusable approach.',actions:[{type:'CONTEXT',value:'decks'}]},
+  {title:'Add another piece of context',note:'The project reference joins it. Cards can accumulate.',actions:[{type:'CONTEXT',value:'foo'}]},
+  {title:'Remove just one card',note:'R2 arms removal. Tap the deck card; the other context stays.',actions:[{type:'ARM_REMOVE'},{type:'CONTEXT',value:'decks'}]},
+  {title:'Save this thought for later',note:'Use “Make this a context” under a response to grow your shelf.',actions:[{type:'MODE',value:'Expand'}]},
+  {title:'Clear the desk',note:'R1 clears added cards. The project’s own context remains.',actions:[{type:'CLEAR'}]}
+ ]},
+ initiative:{name:'Hand over initiative',description:'From one small response to a partner choosing the next activity.',steps:[
+  {title:'A small contribution',note:'Level 1 stays very close to your thought.',actions:[{type:'MODE',value:'Expand'},{type:'INITIATIVE',value:1}]},
+  {title:'Your conversational normal',note:'Level 3 contributes useful possibilities and leaves the next move to you.',actions:[{type:'INITIATIVE',value:3}]},
+  {title:'Give the partner the lead',note:'Level 4 pursues a direction within the current activity.',actions:[{type:'INITIATIVE',value:4}]},
+  {title:'Let it choose what’s needed',note:'Level 6 can move between research, shaping and implementation. These tracks are illustrated.',actions:[{type:'INITIATIVE',value:6}]},
+  {title:'Slow down and examine',note:'Partial braking asks for deeper deliberation without changing initiative.',actions:[{type:'AXIS',key:'brake',value:.6}]},
+  {title:'Find your cruising settings',note:'L2 saves both settings. Feet off; they remain.',actions:[{type:'SAVE'},{type:'RELEASE'}]}
+ ]}
+};
+function tourUI(){const t=tours[tourKey],step=t.steps[tourIndex];$('tourTitle').textContent=step?`${String(tourIndex+1).padStart(2,'0')} / ${String(t.steps.length).padStart(2,'0')} · ${step.title}`:t.name;$('tourDescription').textContent=step?step.note:t.description;$('tourProgress').style.width=`${(tourIndex+1)/t.steps.length*100}%`;$('tourTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tour===tourKey));}
+function applyScene(index){
+ const t=tours[tourKey];tourIndex=Instrument.clamp(index,0,t.steps.length-1);
+ // Reconstruct the selected scene from the start, so Back and Replay are deterministic.
+ state=Instrument.initial();for(let i=0;i<=tourIndex;i++)for(const a of t.steps[i].actions)state=Instrument.reduce(state,a);
+ clearTimeout(gasTimer);clearTimeout(steerTimer);tourUI();
+ if(state.stopped){render();renderMessages();say('Stopped · the next scene taps the gas');}
+ else startResponse(t.steps[tourIndex].title);
+ if(tourPlaying)scheduleScene();
+}
+function scheduleScene(){clearTimeout(autoplayTimer);autoplayTimer=setTimeout(()=>{
+ if(!tourPlaying)return;
+ if(activeMessage&&!state.stopped){scheduleScene();return;}
+ if(tourIndex>=tours[tourKey].steps.length-1){pauseTour();say('Walkthrough complete · the controls are yours');return;}
+ applyScene(tourIndex+1);
+ },state.stopped?2400:3500);}
+function seedConversation(){messages=[{id:++revision,role:'user',speaker:'You',tag:'The starting thought',shown:'I want to stay with my thinking. What if I could change the kind of help I get without having to explain myself all over again?'}];const r=scriptedResponse();messages.push({id:++revision,role:'assistant',speaker:r.speaker,tag:'Download',shown:r.text,text:r.text,annotation:'Current normal · Conversational · initiative 3'});renderMessages();$('conversation').scrollTop=0;}
+function resetDemo({keepTour=false}={}){Live.reset();pauseTour();clearTimeout(streamTimer);clearTimeout(steerTimer);clearTimeout(gasTimer);activeMessage=null;state=Instrument.initial();books=originalBooks.map(x=>({...x}));tourIndex=-1;if(!keepTour)tourKey='feel';buildShelf();if(Live.enabled)renderMessages();else seedConversation();render();tourUI();say('A fresh desk · original defaults restored');}
+function buildShelf(){
+ $('bookshelf').innerHTML=books.map(b=>`<button class="book" style="--book:${b.color||'#a6b98a'}" data-book="${escapeHtml(b.id)}" title="${escapeHtml(b.body)}"><span class="book-text"><strong>${escapeHtml(b.name)}</strong><small>${escapeHtml(b.type)}</small></span><span class="book-mark">+</span></button>`).join('');$('shelfCount').textContent=`${books.length} cards`;buildCardTargets();
+}
+function buildCardTargets(){const old=$('cardTarget').value;$('cardTarget').innerHTML='<optgroup label="Activities">'+Object.keys(modes).map(m=>`<option value="mode:${m}">${m}</option>`).join('')+'</optgroup><optgroup label="Perspectives">'+Object.entries(people).map(([id,p])=>`<option value="person:${id}">${p.name}</option>`).join('')+'</optgroup><optgroup label="Context bookshelf">'+books.map(b=>`<option value="context:${b.id}">${escapeHtml(b.name)}</option>`).join('')+'</optgroup><optgroup label="Saved messages"><option value="message:continue">Continue this idea</option><option value="message:question">What am I missing?</option></optgroup>';if([...$('cardTarget').options].some(o=>o.value===old))$('cardTarget').value=old;}
+function captureMessage(id){const m=messages.find(m=>m.id===Number(id));if(!m?.shown)return;captureText=m.shown;$('contextTitle').value=m.speaker.includes('perspective')?`A view from ${m.speaker.split(' · ')[0]}`:'A physical thinking instrument';$('capturePreview').textContent=captureText;$('captureDialog').showModal();}
+function contextDocument(){return {name:$('contextTitle').value.trim()||'Saved thought',content:captureText,source:Live.enabled?'Live AI response from Joyride':'Prepared response from Joyride demo',createdAt:new Date().toISOString()};}
+function releaseInputs(){clearTimeout(gasTimer);dispatch({type:'RELEASE'},{manual:false,respond:false});renderMessages();}
+function bindSpringRange(id,key){const e=$(id);let held=false;const release=(cancel=false)=>{if(!held)return;held=false;if(cancel){clearTimeout(gasTimer);dispatch({type:'RELEASE'},{respond:false});}else dispatch({type:'AXIS',key,value:0},{respond:key==='wheel'||key==='clutch'});e.value=0;};e.addEventListener('pointerdown',event=>{held=true;e.setPointerCapture(event.pointerId);});e.addEventListener('input',()=>dispatch({type:'AXIS',key,value:Number(e.value)},{respond:key==='wheel'||key==='clutch'}));e.addEventListener('pointerup',()=>release());e.addEventListener('pointercancel',()=>release(true));e.addEventListener('lostpointercapture',()=>release(true));e.addEventListener('keyup',()=>{if(!held){dispatch({type:'AXIS',key,value:0},{respond:key==='wheel'||key==='clutch'});e.value=0;}});}
+function bindHold(button,on,off){let held=false;button.addEventListener('pointerdown',e=>{held=true;button.setPointerCapture(e.pointerId);on();});const release=()=>{if(held){held=false;off();}};button.addEventListener('pointerup',release);button.addEventListener('pointercancel',release);button.addEventListener('lostpointercapture',release);button.addEventListener('keydown',e=>{if([' ','Enter'].includes(e.key)){e.preventDefault();if(!held){held=true;on();}}});button.addEventListener('keyup',e=>{if([' ','Enter'].includes(e.key))release();});button.addEventListener('blur',release);}
+function tapGas(){if(state.axes.brake>=.78){say('Release the brake to resume');return;}dispatch({type:'AXIS',key:'gas',value:.3},{respond:false});setTimeout(()=>dispatch({type:'AXIS',key:'gas',value:0},{respond:false}),120);}
+function init(){
+ const updateViewButton=()=>{const visible=document.body.dataset.view==='instruments';$('viewToggle').textContent=visible?'Hide instruments':'Show instruments';$('viewToggle').setAttribute('aria-expanded',String(visible));};
+ updateViewButton();
+ $('viewToggle').onclick=()=>{
+  const conversation=$('conversation'),scroll=conversation.scrollTop,atEnd=conversation.scrollHeight-scroll-conversation.clientHeight<30;
+  const view=document.body.dataset.view==='text'?'instruments':'text';document.body.dataset.view=view;
+  try{localStorage.setItem('instrument-screen-view',view);}catch{}
+  updateViewButton();conversation.scrollTop=atEnd?conversation.scrollHeight:scroll;
+ };
+ makeDial('wildDial',config.creative.labels.length,config.creative.labels.map((_,i)=>i-reach),'#b8dfa1');makeDial('speedDial',config.speed.length,config.speed.map((_,i)=>i+1),'#ead18c');makeDial('initiativeDial',config.initiative.length,config.initiative.map((_,i)=>i+1),'#a4cfbf');
+ $('modeTabs').innerHTML=Object.keys(modes).map(m=>`<button data-mode="${m}">${m}</button>`).join('');
+ $('people').innerHTML=Object.entries(people).map(([id,p])=>`<button class="person" data-person="${id}"><span class="person-icon">${p.mark}</span><span class="person-name">${p.short}</span><span class="person-role">${p.role}</span></button>`).join('');
+ $('initiativeSteps').innerHTML=config.initiative.map((_,i)=>i+1).map(v=>`<button data-level="${v}" title="${initiativeNames[v]}">${v}</button>`).join('');
+ $('tourTabs').innerHTML=Object.entries(tours).map(([id,t])=>`<button data-tour="${id}">${id==='feel'?'Explore':id==='shelf'?'Bookshelf':'Initiative'}</button>`).join('');
+ buildShelf();seedConversation();render();tourUI();renderButtonMappings();
+ $('modeTabs').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(b)dispatch({type:'MODE',value:b.dataset.mode});});
+ $('people').addEventListener('click',e=>{const b=e.target.closest('[data-person]');if(b)dispatch({type:'PERSON',value:state.person===b.dataset.person?null:b.dataset.person});});
+ $('leavePerson').onclick=()=>dispatch({type:'PERSON',value:null});
+ $('bookshelf').addEventListener('click',e=>{const b=e.target.closest('[data-book]');if(b)dispatch({type:'CONTEXT',value:b.dataset.book});});
+ $('initiativeSteps').addEventListener('click',e=>{const b=e.target.closest('[data-level]');if(b)dispatch({type:'INITIATIVE',value:Number(b.dataset.level)});});
+ $('clearContexts').onclick=()=>dispatch({type:'CLEAR'});$('removeNext').onclick=()=>dispatch({type:'ARM_REMOVE'});$('cancelRemove').onclick=()=>dispatch({type:'ARM_REMOVE'});
+ $('saveDefaults').onclick=()=>dispatch({type:'SAVE'},{respond:false});bindHold($('factoryHold'),()=>dispatch({type:'FACTORY',value:true}),()=>dispatch({type:'FACTORY',value:false}));
+ $('stop').onclick=()=>dispatch({type:'STOP'},{respond:false});$('continue').onclick=()=>{pauseTour();if(state.stopped)tapGas();else startResponse('Continuing');};
+ $('paddleLeft').onclick=()=>dispatch({type:'PADDLE',value:-1});$('paddleRight').onclick=()=>dispatch({type:'PADDLE',value:1});
+ for(const id of ['wheel','gas','brake','clutch'])bindSpringRange(id,id);
+ $('reset').onclick=()=>resetDemo();$('tourBack').onclick=()=>{pauseTour();applyScene(tourIndex-1);};$('tourNext').onclick=()=>{pauseTour();applyScene(tourIndex+1);};
+ $('tourPlay').onclick=()=>{if(tourPlaying){pauseTour();return;}tourPlaying=true;if(tourIndex<0||tourIndex>=tours[tourKey].steps.length-1)applyScene(0);else scheduleScene();render();};
+ $('startDemo').onclick=()=>$('tourPlay').click();
+ $('tourTabs').onclick=e=>{const b=e.target.closest('[data-tour]');if(!b)return;tourKey=b.dataset.tour;resetDemo({keepTour:true});};
+ $('conversation').onclick=e=>{const b=e.target.closest('[data-capture]');if(b)captureMessage(b.dataset.capture);};
+ $('saveContext').onclick=()=>{const d=contextDocument(),book={id:`saved-${++revision}`,name:d.name,body:d.content,type:Live.enabled?'Saved from live AI':'Saved from this demo',color:'#b5a779'};books.push(book);buildShelf();render();$('captureDialog').close();say('Added to your bookshelf · tap its card to activate');};
+ $('downloadContext').onclick=()=>{const d=contextDocument(),url=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='joyride-context.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+ $('hardwareOpen').onclick=()=>$('hardwareDialog').showModal();$('connectHardware').onclick=connectHardware;$('disconnectHardware').onclick=disconnectHardware;
+ $('bindCard').onclick=()=>{if(!lastCard)return;cardBindings.set(lastCard.uid,$('cardTarget').value);$('hardwareMessage').textContent='Assigned for this demo. Lift and present the card again to activate it.';say('Card assigned · lift and present it again');};
+ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
+ document.addEventListener('keydown',e=>{if(e.repeat||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select,[contenteditable],dialog'))return;if(e.target.closest('button')&&[' ','Enter'].includes(e.key))return;
+  const actions={'ArrowLeft':()=>dispatch({type:'PADDLE',value:-1}),'ArrowRight':()=>dispatch({type:'PADDLE',value:1}),' ':()=>dispatch({type:'STOP'},{respond:false}),'Enter':()=>state.stopped?tapGas():startResponse('Continuing'),'l':()=>dispatch({type:'SAVE'},{respond:false}),'d':()=>dispatch({type:'FACTORY',value:true}),'Escape':()=>releaseInputs()};
+  if(actions[e.key]){e.preventDefault();actions[e.key]();}
+ });
+ document.addEventListener('keyup',e=>{if(e.key==='d'&&state.factory)dispatch({type:'FACTORY',value:false});});
+ window.addEventListener('blur',()=>{pauseTour();releaseInputs();});document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseTour();releaseInputs();}});
+}
+const buttonActions={paddleLeft:'Left paddle',paddleRight:'Right paddle',save:'L2 · set cruise',factory:'L3 · hold default',clear:'R1 · clear contexts',remove:'R2 · remove next'};
+function renderButtonMappings(){ $('buttonMappings').innerHTML=Object.entries(buttonActions).map(([key,name])=>{const found=[...buttonBindings].find(([,action])=>action===key);return `<button data-learn="${key}">${name}<br><span class="muted">${found?`Mapped to ${found[0]}`:'Click, then press the physical button'}</span></button>`;}).join('');$('buttonMappings').onclick=e=>{const b=e.target.closest('[data-learn]');if(b){learnButton=b.dataset.learn;$('hardwareMessage').textContent=`Press the physical button for ${buttonActions[learnButton]}.`;}};}
+function handleHardwareButton(event){
+ if(learnButton&&event.edge==='press'){for(const [code,action]of buttonBindings)if(action===learnButton)buttonBindings.delete(code);buttonBindings.set(event.control,learnButton);$('hardwareMessage').textContent=`${buttonActions[learnButton]} mapped. Press it again to use it.`;learnButton=null;renderButtonMappings();return;}
+ const action=buttonBindings.get(event.control);if(!action)return;
+ if(action==='factory'){dispatch({type:'FACTORY',value:event.edge==='press'});return;}
+ if(event.edge!=='press')return;
+ if(action==='paddleLeft')dispatch({type:'PADDLE',value:-1});if(action==='paddleRight')dispatch({type:'PADDLE',value:1});if(action==='save')dispatch({type:'SAVE'},{respond:false});if(action==='clear')dispatch({type:'CLEAR'});if(action==='remove')dispatch({type:'ARM_REMOVE'});
+}
+function handleCard(event){
+ if(event.type==='card_present'){
+  lastCard={uid:event.uid,reader:event.reader_id};$('lastCard').textContent=`Card …${event.uid.slice(-6)} · ${event.label||'reader'}`;$('bindCard').disabled=false;
+  const target=cardBindings.get(event.uid);if(!target){$('hardwareMessage').textContent='New card detected. Choose its meaning and assign it.';return;}
+  const [kind,value]=target.split(':');if(kind==='context')dispatch({type:'CONTEXT',value});
+  if(kind==='mode')dispatch({type:'MODE',value});
+  if(kind==='person'){visitingCards.set(event.reader_id,{uid:event.uid,person:value});dispatch({type:'PERSON',value});}
+  if(kind==='message'){pauseTour();messages.push({id:++revision,role:'user',speaker:'You',tag:'Saved message card',shown:value==='question'?'What am I missing?':'Continue this idea.'});renderMessages();if(!state.stopped)startResponse('Saved message card');}
+ }
+ if(event.type==='card_removed'){
+  const visit=visitingCards.get(event.reader_id);if(visit&&visit.uid===event.uid){visitingCards.delete(event.reader_id);if(state.person===visit.person)dispatch({type:'PERSON',value:null});}
+ }
+}
+async function hardwareGet(kind,path){const r=await fetch(`/hardware/${kind}/${path}`,{signal:AbortSignal.timeout(1800)});if(!r.ok)throw new Error('Service unavailable');return r.json();}
+async function connectHardware(){
+ if(hardwareRunning)return;hardwareRunning=true;const epoch=++hardwareEpoch;$('hardwareMessage').textContent='Connecting to the local input services…';
+ $('connectionLabel').textContent='Hardware bridge enabled · local inputs only · no AI calls';
+ await Promise.allSettled([pollHardware('wheel',epoch),pollHardware('nfc',epoch)]);
+}
+function disconnectHardware(){hardwareRunning=false;hardwareEpoch++;learnButton=null;visitingCards.clear();releaseInputs();$('wheelStatus').textContent='Wheel · disconnected';$('nfcStatus').textContent='Readers · disconnected';$('connectionLabel').textContent='On-screen controls · no AI calls · local session';$('hardwareMessage').textContent='Disconnected. On-screen controls remain available.';}
+async function pollHardware(kind,epoch){
+ let cursor=null,session=null,wasConnected=false;
+ while(hardwareRunning&&epoch===hardwareEpoch){
+  try{
+   const data=await hardwareGet(kind,cursor===null?'state':`events?after=${cursor}&session=${encodeURIComponent(session)}`);
+   if(!hardwareRunning||epoch!==hardwareEpoch)return;
+   const resync=cursor===null||data.resync;cursor=data.cursor;session=data.session;
+   if(kind==='wheel'){
+    const connected=Boolean(data.state.connected);$('wheelStatus').textContent=connected?'Wheel · connected':'Wheel · service ready, device unavailable';
+    if(resync||(!connected&&wasConnected)){releaseInputs();if(wasConnected)dispatch({type:'STOP'},{manual:false,respond:false});}
+    if(connected&&!document.hidden){
+     if(resync){for(const [raw,value]of Object.entries(data.state.axes||{})){const key={steering:'wheel',throttle:'gas',brake:'brake',clutch:'clutch'}[raw];if(key&&key!=='gas')dispatch({type:'AXIS',key,value},{manual:false,respond:false});}}
+     else for(const event of data.events||[]){if(event.type!=='input')continue;if(event.control.startsWith('button:'))handleHardwareButton(event);else{const key={steering:'wheel',throttle:'gas',brake:'brake',clutch:'clutch'}[event.control];if(key)dispatch({type:'AXIS',key,value:event.value},{respond:key==='wheel'||key==='clutch'});}}
+    }
+    wasConnected=connected;
+   }else{
+    const readers=Object.values(data.state.readers||{}),connected=readers.filter(x=>x.connected).length;$('nfcStatus').textContent=`Readers · ${connected} connected`;
+    if(resync){for(const r of readers)if(r.uid){lastCard={uid:r.uid};$('lastCard').textContent=`Card …${r.uid.slice(-6)} detected`;$('bindCard').disabled=false;}}
+    else if(!document.hidden)for(const event of data.events||[])handleCard(event);
+   }
+  }catch{
+   if(!hardwareRunning||epoch!==hardwareEpoch)return;
+   if(kind==='wheel'){if(wasConnected){releaseInputs();dispatch({type:'STOP'},{manual:false,respond:false});}wasConnected=false;$('wheelStatus').textContent='Wheel · service unavailable';}else $('nfcStatus').textContent='Readers · service unavailable';
+   cursor=null;session=null;$('hardwareMessage').textContent='Run npm run demo and the input services on this computer to connect. The screen controls work independently.';
+  }
+  await new Promise(r=>setTimeout(r,kind==='wheel'?60:200));
+ }
+}
+init();Live.init();PhysicalDisplays.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "bindings": [
+    {"control": "steering", "action": "steering.position"},
+    {"control": "throttle", "action": "throttle.position"},
+    {"control": "brake", "action": "brake.position"},
+    {"control": "clutch", "action": "clutch.position"},
+    {"control": "dpad_x", "action": "navigation.horizontal"},
+    {"control": "dpad_y", "action": "navigation.vertical"}
+  ]
+}

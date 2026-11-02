@@ -1,0 +1,8 @@
+// Optional template: replace both placeholders with your local user and exact reader name.
+// Install deliberately in the host policy directory only if PC/SC access requires it.
+polkit.addRule(function(action, subject) {
+    if (subject.user !== "YOUR_LOCAL_USER") return;
+    if (action.id === "org.debian.pcsc-lite.access_pcsc") return polkit.Result.YES;
+    if (action.id === "org.debian.pcsc-lite.access_card" &&
+        action.lookup("reader") === "YOUR_EXACT_READER_NAME") return polkit.Result.YES;
+});
