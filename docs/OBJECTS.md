@@ -162,7 +162,7 @@ You might want a single control, a room full of objects, or a completely differe
 
 ## The computer and the other pieces
 
-A **Raspberry Pi 5** runs my server and local input adapters. An **OWC Thunderbolt Hub (OWCTB4HUB5P)** helps connect the USB inputs. The earlier version also explored a **Samsung Galaxy Fold** as a touch interface with optional tilt and microphone controls; that version remains available through `npm run pilot`.
+A **Raspberry Pi 5** runs my server and local input adapters. An **OWC Thunderbolt Hub (OWCTB4HUB5P)** helps connect the USB inputs. I use a **Google Pixel 10 Pro Fold** as the phone. The earlier interface explored touch with optional tilt and microphone controls; that version remains available through `npm run pilot`.
 
 <a href="https://www.raspberrypi.com/products/raspberry-pi-5/"><img src="https://www.raspberrypi.com/app/uploads/2023/09/aa7841cb-421a-4000-8ab9-c77478a4f83b-1024x683.jpg" alt="Raspberry Pi 5 single-board computer" width="360"></a>
 
@@ -172,11 +172,9 @@ A **Raspberry Pi 5** runs my server and local input adapters. An **OWC Thunderbo
 
 [OWC Thunderbolt Hub](https://www.owc.com/solutions/thunderbolt-hub) · Photo: OWC.
 
-<a href="https://www.samsung.com/us/smartphones/galaxy-z-fold7/"><img src="https://image-us.samsung.com/us/smartphones/galaxy-z-fold7/images/galaxy-z-fold7-features-kv.jpg?imbypass=true&amp;nocache=true" alt="Illustrative Galaxy Z Fold7 phone, not an identification of the pilot phone" width="360"></a>
+<a href="https://store.google.com/product/pixel_10_pro_fold"><img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/images/PixelFold_SS.width-1300.png" alt="Google Pixel 10 Pro Fold manufacturer product photo" width="360"></a>
 
-[Samsung Galaxy Z Fold7 — illustrative Fold-family example](https://www.samsung.com/us/smartphones/galaxy-z-fold7/) · Photo: Samsung.
-
-The phone photo illustrates the Fold family; the exact generation used in my pilot is not recorded here. It is not a requirement to buy this model.
+[Google Pixel 10 Pro Fold](https://store.google.com/product/pixel_10_pro_fold) · Photo: [Google](https://blog.google/products-and-platforms/devices/pixel/google-pixel-10-pro-fold/).
 
 You can run the main web application on another computer with Node.js. The hub and phone are optional parts of my setup, and other suitable devices can fill those roles. The Linux input adapters and board-specific firmware have their own requirements, described below.
 
