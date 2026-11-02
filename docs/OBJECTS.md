@@ -1,40 +1,108 @@
-# Optional objects and gizmos
+# Optional objects and gizmos: what I used
 
-Joyride begins in the browser. Physical objects are another way to explore the same experiment. The devices below describe the original setup and exploratory inventory; they are examples, not a shopping list or compatibility guarantee. Use what you own, substitute something else, or stay entirely on screen.
+Here is how I brought Joyride into the physical world: a racing wheel and pedals for my hands and feet, small displays that give different parts of the conversation a place on the desk, and objects I can pick up, put down and associate with a way of thinking.
 
-## Find an object by the move it gives you
+This is a walkthrough of my setup. I’m sharing the actual parts and what I did with them so you have something concrete to borrow from. The arrangement is still an experiment, and the parts are replaceable. You can start with the browser, try one physical element, or build a completely different arrangement.
 
-Start with a useful gesture: turn to change creative reach, press to stop, hold to adjust initiative, place an object to invite a perspective, or glance at a display to see the current activity. Try that move on screen first.
+## A Logitech wheel for my hands, pedals for my feet
 
-Look for an accessible interface in the manufacturer's documentation: USB HID/gamepad, keyboard events, MIDI, serial, Bluetooth or a documented local network API. Check whether your operating system can read it and whether it reports continuous position, press/release, presence/removal or only a tap. Search terms such as “USB rotary encoder HID,” “MIDI control surface,” “PC/SC NFC reader,” and “microcontroller display serial example” can help you find candidates. Search by the interface and gesture rather than copying a brand.
+I use a **Logitech G29 racing wheel and pedal set**. It gives me a wheel, accelerator, brake, clutch, paddles and buttons in one physical arrangement. My hands and feet can do different things while I stay with the idea I am developing.
 
-Confirm the exact model, revision, driver and power requirements before connecting it. A look-alike board can have a different panel controller. Reuse a known interface when possible; a new gizmo usually needs a small adapter, calibration and a disconnect policy. Keep hardware reading separate from what the gesture means.
+I mapped the wheel to **creative reach**: left asks for more conventional thinking, right for more surprising or outlandish possibilities. The paddles make smaller, one-step adjustments. Centering the wheel returns to the current baseline.
 
-## Examples from the original experiment
+The **accelerator** asks for a quicker, more direct exchange. The **brake** asks for more deliberation when partly pressed and stops the response when pressed firmly. Releasing the brake leaves the conversation stopped; tapping the accelerator resumes it. The **clutch** changes how much initiative the AI takes, from following my lead to taking more responsibility for developing the work.
 
-| Object | Possible role | Included support |
-| --- | --- | --- |
-| Logitech G29 wheel, pedals and buttons | Creative reach, pace, initiative, stop/resume and shortcuts | Linux evdev reader in `services/wheel/` |
-| Two ACS ACR1552 NFC readers with tags/cards and figurines | Separate placement/removal of perspectives and context references | PC/SC reader in `services/nfc/`; browser card mapping |
-| Raspberry Pi host | Run the web server and local adapters | Ordinary Node server; the web core also runs on other computers |
-| Samsung Galaxy Fold / another phone | Touch controls, optional tilt and microphone | Earlier persistent pilot via `npm run pilot` |
-| OWC USB hub / another suitable powered hub | Connect several inputs | No hub-specific software |
-| Bambu Lab printer / another 3D printer | Optional housings, holders and objects | Housing exploration only; no CAD models or printer integration included |
+Buttons handle deliberate moves such as saving the current settings as my new normal, temporarily returning to the original defaults, or removing context. The interface calls these **Set cruise (L2)**, **Hold for default (L3)**, **Clear cards (R1)** and **Remove next (R2)**. The button-learning interface lets you assign these functions to the physical buttons you want.
 
-The [G29 manufacturer's page](https://www.logitechg.com/en-us/shop/p/driving-force-racing-wheel) identifies the wheel family. Joyride's driver targets USB `046d:c24f` and reads axis/button events without force feedback. For readers, consult the [ACS reference manual](https://www.acs.com.hk/download-manual/13475/REF-ACR1552U-Series-1.05.pdf) and [pyscard guide](https://pyscard.sourceforge.io/user-guide.html). Reading a tag ID does not write data to the tag or make the tag an authentication credential.
+That combination lets me explore several things at once. My hands might move toward a stranger idea while my foot asks for a more considered response. I can stop, sit with what happened, and resume. The wheel and pedals give those changes a bodily feel.
 
-The following display targets have firmware in this repository. Each receives one slice of shared state. Browser-only use needs none of them.
+The included Linux adapter is in `services/wheel/`. It reads the controls without sending force-feedback commands to the wheel. The [manufacturer’s page](https://www.logitechg.com/en-us/shop/p/driving-force-racing-wheel) identifies the G29 family; the adapter targets USB `046d:c24f`. The [README](../README.md#how-this-version-works) explains the current control meanings in more detail.
 
-| Role / source folder | Original target | Upstream documentation |
-| --- | --- | --- |
-| `mode-display` | Waveshare ESP32-C6-Touch-AMOLED-2.16, 480 × 480 | [Board docs](https://docs.waveshare.com/ESP32-C6-Touch-AMOLED-2.16) |
-| `speed-display` | Waveshare ESP32-S3-Touch-LCD-1.28, round 240 × 240 | [Board docs](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.28) |
-| `reach-display` | Waveshare ESP32-S3-Touch-LCD-1.47, 172 × 320 | [Board docs](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.47) |
-| `initiative-display` | Waveshare ESP32-S3-Touch-AMOLED-1.91, 240 × 536 | [Family docs](https://docs.waveshare.com/ESP32-S3-AMOLED-1.91) |
-| `context-display` | Waveshare ESP32-S3-ePaper-3.97, 800 × 480 | [Board docs](https://docs.waveshare.com/ESP32-S3-ePaper-3.97) |
-| `perspective-display` | Waveshare ESP32-S3-ePaper-1.54, monochrome 200 × 200, **without G** | [Board docs](https://docs.waveshare.com/ESP32-S3-ePaper-1.54) |
+## Six small Waveshare displays
 
-The exploratory inventory also included a 1.54-inch four-color ESP32-S3 e-paper board (reported SKU 34586), a 1.54-inch ESP32-C6 e-paper board (34393), and a 1.54-inch monochrome/touch listing (34211). Purchase descriptions and delivered revisions can differ. These extra variants are not all supported by the included firmware. The G/four-color driver is not interchangeable with the monochrome perspective target. Check the label and official documentation for your actual board.
+I wanted a collection of small instruments, a little like a cockpit: each display has a particular job, and I can see the state of the collaboration at a glance. The main screen can hold the conversation while these other pieces keep the activity, settings and context visible around it.
+
+My setup uses six **Waveshare** displays. They have different shapes and kinds of screen, which lets me try different ways of presenting the information. Here is what each one does.
+
+### 1. The current activity
+
+The **Waveshare ESP32-C6-Touch-AMOLED-2.16** is a 480 × 480 display for the current mode: Download, Expand, Challenge, Structure or Implement. During a perspective visit, it can show the visitor and the activity waiting for me when I return. This gives the question “what are we doing together right now?” its own visible place.
+
+[Board documentation](https://docs.waveshare.com/ESP32-C6-Touch-AMOLED-2.16) · [Firmware](../firmware/mode-display/)
+
+### 2. Deliberation and speed
+
+The **Waveshare ESP32-S3-Touch-LCD-1.28** is a round, 240 × 240 screen. I use it as a speed/deliberation gauge, showing where the exchange sits between deeper consideration and a quicker response. It makes the pace setting visible as I use the pedals.
+
+[Board documentation](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.28) · [Firmware](../firmware/speed-display/)
+
+### 3. Creative reach
+
+The **Waveshare ESP32-S3-Touch-LCD-1.47** is a rectangular, 172 × 320 screen, used sideways in this setup. It shows creative reach: how conventional or wild I am asking the conversation to become. Turning the wheel changes this setting, and the display lets me see it separately from the conversation text.
+
+[Board documentation](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.47) · [Firmware](../firmware/reach-display/)
+
+### 4. Initiative and status
+
+The **Waveshare ESP32-S3-Touch-AMOLED-1.91** is a 240 × 536 display, also used in landscape. It shows the initiative level and whether the system is ready, working or stopped. This is where I can glance to see how much room I have given the AI to lead.
+
+[Family documentation](https://docs.waveshare.com/ESP32-S3-AMOLED-1.91) · [Firmware](../firmware/initiative-display/)
+
+### 5. The context on the desk
+
+The **Waveshare ESP32-S3-ePaper-3.97** is an 800 × 480 monochrome e-paper screen, used in portrait orientation here. It lists the active context cards: the material I have brought into the conversation. Giving that material a separate display helps keep track of what is currently in play.
+
+[Board documentation](https://docs.waveshare.com/ESP32-S3-ePaper-3.97) · [Firmware](../firmware/context-display/)
+
+### 6. The visiting perspective
+
+The **Waveshare ESP32-S3-ePaper-1.54** is a small, 200 × 200 monochrome e-paper screen. I use it for the visiting thinker’s portrait and name. Inviting a perspective can then have a visible presence beside the work; ending the visit clears the visitor state. The public firmware starts with name-only entries, and the portrait-encoding tool lets you supply your own images.
+
+This particular board is the monochrome model **without G** in its name. A similarly named four-color model uses different display commands. Matching the exact board matters when reusing the firmware.
+
+[Board documentation](https://docs.waveshare.com/ESP32-S3-ePaper-1.54) · [Firmware](../firmware/perspective-display/)
+
+### Connecting the displays
+
+These displays receive their updates over **Wi-Fi**. USB is used for programming and can also provide power from a charger. Each display receives the relevant state from the same Joyride session; the screen is a view of the collaboration, not a separate AI conversation.
+
+The included firmware covers these six roles. My exploratory purchases also included a 1.54-inch four-color ESP32-S3 e-paper board (reported SKU 34586), a 1.54-inch ESP32-C6 e-paper board (34393), and a 1.54-inch monochrome/touch listing (34211). Those listings helped me explore options, but they should not all be read as additional working display targets. Purchase descriptions and delivered revisions can differ; use the exact model printed on your board when choosing firmware.
+
+## Objects and cards I can place on the desk
+
+I use **two ACS ACR1552 NFC readers** to detect cards or tagged objects. A tag gives an object an identity that Joyride can associate with a mode, a perspective or a piece of context. The shape and meaning of the object are yours to choose.
+
+In the current interaction, placing an assigned perspective card starts a visit; removing it ends the visit. A context card works differently: placing it adds the context, which stays available after I lift the card. I remove that context deliberately with the controls. Two readers let objects be detected independently at two stations.
+
+This gives the act of inviting someone or bringing material into the conversation a physical form. I can choose something, move it into place and take it away again.
+
+The reader service is in `services/nfc/`. It reads tag identity and leaves the contents of the tag alone. The [ACS reference manual](https://www.acs.com.hk/download-manual/13475/REF-ACR1552U-Series-1.05.pdf) and [pyscard guide](https://pyscard.sourceforge.io/user-guide.html) explain the underlying reader interfaces.
+
+## Making objects with my printer
+
+I use a **Bambu Lab P2S 3D printer** to create some of the physical objects for this experiment. Being able to make an object gives me a way to try a shape, hold it, move it around and decide whether it feels right for the idea or action I want it to represent. [About the printer](https://blog.bambulab.com/the-icon-redefined-meet-the-p2s-a-completely-reengineered-version-of-the-ultra-productive-p1-series/).
+
+A printed object can carry an NFC tag so the system recognizes it. Printing also opens up possibilities for holders and enclosures that put the displays where I want them. Those are ways to extend the arrangement; this repository currently includes the software and firmware, without a collection of printable CAD or STL files.
+
+**But you can do whatever you want. There are lots of ways to bring the physical world into how you think with AI.**
+
+Use objects you already have. Make something from clay, cardboard or wood. Put a tag on a familiar object. Try a dial, a joystick, a musical controller, a pressure-sensitive object or a different set of buttons. An object can also help you think simply through holding it, moving it or giving it a place; it does not have to send a signal to a computer.
+
+You might want a single control, a room full of objects, or a completely different set of bodily movements. My wheel, screens and printer are one route into the experiment. The interesting part is finding out what your arrangement makes possible for you.
+
+## The computer and the other pieces
+
+A **Raspberry Pi** runs my server and local input adapters. An **OWC USB hub** helps connect the inputs. The earlier version also explored a **Samsung Galaxy Fold** as a touch interface with optional tilt and microphone controls; that version remains available through `npm run pilot`.
+
+You can run the main web application on another computer with Node.js. The hub and phone are optional parts of my setup, and other suitable devices can fill those roles. The Linux input adapters and board-specific firmware have their own requirements, described below.
+
+## Finding an interface for your own gizmo
+
+Start with what you want to do with your body: turn, squeeze, press, hold, place, lift, move or glance. Consider the feel of the action and whether it can happen alongside your thinking. You can try the meaning of a control on screen, then explore what the physical experience adds.
+
+When you want the object to control Joyride, look for an accessible interface in its manufacturer’s documentation: USB HID/gamepad, keyboard events, MIDI, serial, Bluetooth or a documented local network API. Check whether your operating system can read it and whether it reports continuous position, press/release, presence/removal or only a tap. Search terms such as “USB rotary encoder HID,” “MIDI control surface” and “PC/SC NFC reader” can help you find candidates.
+
+A new gizmo usually needs an adapter that translates its signals into Joyride actions, plus calibration and a policy for what happens when it disconnects. The details below are here if you want to reuse or adapt my implementation.
 
 ## Run the optional input adapters
 
