@@ -4,9 +4,15 @@ Here is how I brought Joyride into the physical world: a racing wheel and pedals
 
 This is a walkthrough of my setup. I’m sharing the actual parts and what I did with them so you have something concrete to borrow from. The arrangement is still an experiment, and the parts are replaceable. You can start with the browser, try one physical element, or build a completely different arrangement.
 
+The linked photos come from the manufacturers and suppliers. They show stock hardware and sample screens; the walkthrough explains what I do with it in Joyride. Click a photo or its caption to find the device. These externally hosted images remain the property of their owners and are not covered by this repository’s MIT license.
+
 ## A Logitech wheel for my hands, pedals for my feet
 
 I use a **Logitech G29 racing wheel and pedal set**. It gives me a wheel, accelerator, brake, clutch, paddles and buttons in one physical arrangement. My hands and feet can do different things while I stay with the idea I am developing.
+
+<a href="https://www.logitechg.com/en-us/shop/p/driving-force-racing-wheel"><img src="https://resource.logitechg.com/w_544,h_466,ar_7:6,c_pad,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/gaming/en/products/drivingforce/2025/gallery/g29-playstation-3qtr-angle-gallery-1.png" alt="Logitech G29 racing wheel with its three-pedal unit" width="440"></a>
+
+[Logitech G29 wheel and pedals](https://www.logitechg.com/en-us/shop/p/driving-force-racing-wheel) · Photo: Logitech.
 
 I mapped the wheel to **creative reach**: left asks for more conventional thinking, right for more surprising or outlandish possibilities. The paddles make smaller, one-step adjustments. Centering the wheel returns to the current baseline.
 
@@ -28,11 +34,19 @@ My setup uses six **Waveshare** displays. They have different shapes and kinds o
 
 The **Waveshare ESP32-C6-Touch-AMOLED-2.16** is a 480 × 480 display for the current mode: Download, Expand, Challenge, Structure or Implement. During a perspective visit, it can show the visitor and the activity waiting for me when I return. This gives the question “what are we doing together right now?” its own visible place.
 
+<a href="https://www.waveshare.com/esp32-c6-touch-amoled-2.16.htm"><img src="https://docs.waveshare.com/assets/images/ESP32-C6-Touch-AMOLED-2.16-DocHeader-1-b7afdf1b84c16b189ed152067ea1d8f3.webp" alt="Waveshare ESP32-C6-Touch-AMOLED-2.16 manufacturer product photo" width="360"></a>
+
+[ESP32-C6-Touch-AMOLED-2.16](https://www.waveshare.com/esp32-c6-touch-amoled-2.16.htm) · Photo: Waveshare.
+
 [Board documentation](https://docs.waveshare.com/ESP32-C6-Touch-AMOLED-2.16) · [Firmware](../firmware/mode-display/)
 
 ### 2. Deliberation and speed
 
 The **Waveshare ESP32-S3-Touch-LCD-1.28** is a round, 240 × 240 screen. I use it as a speed/deliberation gauge, showing where the exchange sits between deeper consideration and a quicker response. It makes the pace setting visible as I use the pedals.
+
+<a href="https://www.waveshare.com/esp32-s3-touch-lcd-1.28.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-s3-touch-lcd-1.28-1.jpg" alt="Waveshare ESP32-S3-Touch-LCD-1.28 manufacturer product photo" width="360"></a>
+
+[ESP32-S3-Touch-LCD-1.28](https://www.waveshare.com/esp32-s3-touch-lcd-1.28.htm) · Photo: Waveshare.
 
 [Board documentation](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.28) · [Firmware](../firmware/speed-display/)
 
@@ -40,11 +54,19 @@ The **Waveshare ESP32-S3-Touch-LCD-1.28** is a round, 240 × 240 screen. I use i
 
 The **Waveshare ESP32-S3-Touch-LCD-1.47** is a rectangular, 172 × 320 screen, used sideways in this setup. It shows creative reach: how conventional or wild I am asking the conversation to become. Turning the wheel changes this setting, and the display lets me see it separately from the conversation text.
 
+<a href="https://www.waveshare.com/esp32-s3-touch-lcd-1.47.htm"><img src="https://docs.waveshare.com/assets/images/ESP32-S3-Touch-LCD-1.47-details-3-1-5fc18c6a3960c3ac38e15d2a51caec4c.webp" alt="Waveshare ESP32-S3-Touch-LCD-1.47 manufacturer product photo" width="360"></a>
+
+[ESP32-S3-Touch-LCD-1.47](https://www.waveshare.com/esp32-s3-touch-lcd-1.47.htm) · Photo: Waveshare.
+
 [Board documentation](https://docs.waveshare.com/ESP32-S3-Touch-LCD-1.47) · [Firmware](../firmware/reach-display/)
 
 ### 4. Initiative and status
 
 The **Waveshare ESP32-S3-Touch-AMOLED-1.91** is a 240 × 536 display, also used in landscape. It shows the initiative level and whether the system is ready, working or stopped. This is where I can glance to see how much room I have given the AI to lead.
+
+<a href="https://www.waveshare.com/esp32-s3-amoled-1.91.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-s3-amoled-1.91-1.jpg" alt="Waveshare ESP32-S3-Touch-AMOLED-1.91 manufacturer product photo" width="360"></a>
+
+[ESP32-S3-Touch-AMOLED-1.91 — touch option on the family page](https://www.waveshare.com/esp32-s3-amoled-1.91.htm) · Photo: Waveshare.
 
 [Family documentation](https://docs.waveshare.com/ESP32-S3-AMOLED-1.91) · [Firmware](../firmware/initiative-display/)
 
@@ -52,11 +74,19 @@ The **Waveshare ESP32-S3-Touch-AMOLED-1.91** is a 240 × 536 display, also used 
 
 The **Waveshare ESP32-S3-ePaper-3.97** is an 800 × 480 monochrome e-paper screen, used in portrait orientation here. It lists the active context cards: the material I have brought into the conversation. Giving that material a separate display helps keep track of what is currently in play.
 
+<a href="https://www.waveshare.com/esp32-s3-epaper-3.97.htm"><img src="https://docs.waveshare.com/assets/images/ESP32-S3-ePaper-3.97-1-0816d1011625db67faece5dbc4613ca4.webp" alt="Waveshare ESP32-S3-ePaper-3.97 manufacturer product photo" width="360"></a>
+
+[ESP32-S3-ePaper-3.97](https://www.waveshare.com/esp32-s3-epaper-3.97.htm) · Photo: Waveshare.
+
 [Board documentation](https://docs.waveshare.com/ESP32-S3-ePaper-3.97) · [Firmware](../firmware/context-display/)
 
 ### 6. The visiting perspective
 
 The **Waveshare ESP32-S3-ePaper-1.54** is a small, 200 × 200 monochrome e-paper screen. I use it for the visiting thinker’s portrait and name. Inviting a perspective can then have a visible presence beside the work; ending the visit clears the visitor state. The public firmware starts with name-only entries, and the portrait-encoding tool lets you supply your own images.
+
+<a href="https://www.waveshare.com/esp32-s3-epaper-1.54.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-s3-epaper-1.54-1.jpg" alt="Waveshare ESP32-S3-ePaper-1.54 manufacturer product photo" width="360"></a>
+
+[ESP32-S3-ePaper-1.54](https://www.waveshare.com/esp32-s3-epaper-1.54.htm) · Photo: Waveshare.
 
 This particular board is the monochrome model **without G** in its name. A similarly named four-color model uses different display commands. Matching the exact board matters when reusing the firmware.
 
@@ -68,9 +98,25 @@ These displays receive their updates over **Wi-Fi**. USB is used for programming
 
 The included firmware covers these six roles. My exploratory purchases also included a 1.54-inch four-color ESP32-S3 e-paper board (reported SKU 34586), a 1.54-inch ESP32-C6 e-paper board (34393), and a 1.54-inch monochrome/touch listing (34211). Those listings helped me explore options, but they should not all be read as additional working display targets. Purchase descriptions and delivered revisions can differ; use the exact model printed on your board when choosing firmware.
 
+### Other display variants I explored
+
+These are the additional listings mentioned above, with their own photos and links. They are exploration options, not three more validated Joyride firmware targets.
+
+| Variant | Manufacturer photo | Listing |
+| --- | --- | --- |
+| ESP32-S3-ePaper-1.54G | <a href="https://www.waveshare.com/esp32-s3-epaper-1.54g.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-s3-epaper-1.54g-1.jpg" alt="Waveshare ESP32-S3-ePaper-1.54G" width="180"></a> | [Waveshare product page](https://www.waveshare.com/esp32-s3-epaper-1.54g.htm) · SKU 34586 |
+| ESP32-C6-ePaper-1.54 | <a href="https://www.waveshare.com/esp32-c6-epaper-1.54.htm"><img src="https://www.waveshare.com/media/catalog/product/e/s/esp32-c6-epaper-1.54-1.jpg" alt="Waveshare ESP32-C6-ePaper-1.54" width="180"></a> | [Waveshare product page](https://www.waveshare.com/esp32-c6-epaper-1.54.htm) · SKU 34393 |
+| ESP32-S3-Touch-ePaper-1.54 | <a href="https://www.waveshare.com/esp32-s3-epaper-1.54.htm"><img src="https://www.waveshare.com/img/devkit/ESP32-S3-ePaper-1.54/ESP32-S3-Touch-ePaper-1.54-2.jpg" alt="Waveshare ESP32-S3-Touch-ePaper-1.54" width="180"></a> | [Waveshare product page](https://www.waveshare.com/esp32-s3-epaper-1.54.htm) · SKU 34211 |
+
+Photos: Waveshare. On family pages, choose the named variant and check its revision before using a build recipe.
+
 ## Objects and cards I can place on the desk
 
 I use **two ACS ACR1552 NFC readers** to detect cards or tagged objects. A tag gives an object an identity that Joyride can associate with a mode, a perspective or a piece of context. The shape and meaning of the object are yours to choose.
+
+<a href="https://store.acs.com.hk/products/575/acr1552u-usb-nfc-reader-iv/smart-card-readers/"><img src="https://downloads.acs.com.hk/product-image-library/en/13150-thumb.png" alt="White ACS ACR1552U NFC reader" width="225"></a>
+
+[ACS ACR1552U USB NFC Reader IV](https://store.acs.com.hk/products/575/acr1552u-usb-nfc-reader-iv/smart-card-readers/) · Photo: ACS.
 
 In the current interaction, placing an assigned perspective card starts a visit; removing it ends the visit. A context card works differently: placing it adds the context, which stays available after I lift the card. I remove that context deliberately with the controls. Two readers let objects be detected independently at two stations.
 
@@ -78,9 +124,33 @@ This gives the act of inviting someone or bringing material into the conversatio
 
 The reader service is in `services/nfc/`. It reads tag identity and leaves the contents of the tag alone. The [ACS reference manual](https://www.acs.com.hk/download-manual/13475/REF-ACR1552U-Series-1.05.pdf) and [pyscard guide](https://pyscard.sourceforge.io/user-guide.html) explain the underlying reader interfaces.
 
+### RFID/NFC cards and the chips inside objects
+
+The cards and small tags are part of the physical interface too. A card gives me something I can label, lay out, pick up and place beside the work. A small tag can give a sculpture, token or other object an identity. In this setup, Joyride reads that identity and associates it with a mode, perspective or context; the instructions and context live on the computer, rather than inside the card.
+
+I have used cards with the two readers. The exact supplier and chip model of my cards and small tags are not recorded here, so the photographed products below are **examples to explore**, not a claim that these are my exact purchases or that I have tested every shape.
+
+<a href="https://www.adafruit.com/product/6441"><img src="https://cdn-shop.adafruit.com/970x728/6441-00.jpg" alt="Five RFID/NFC tags: a blank card, sticker, clear round tag showing the chip and antenna, white round tag and key fob" width="520"></a>
+
+[RFID/NFC tag assortment: card, sticker, round tags and key fob](https://www.adafruit.com/product/6441) · Photo: Adafruit.
+
+| Form | Example and link | Something you could try |
+| --- | --- | --- |
+| Blank card | [13.56 MHz NTAG213 card](https://www.adafruit.com/product/4034) | Label cards with activities, perspectives or pieces of context, then arrange them around your work. |
+| Adhesive sticker | [13.56 MHz NTAG213 sticker](https://www.adafruit.com/product/4032) | Put a tag underneath an object you already like holding. |
+| Small round tag / “chip” | [Clear NTAG213 tag with visible chip and antenna](https://www.adafruit.com/product/5458) | Fit a complete tag into the base of a printed token or figurine. |
+
+The tiny chip needs an antenna: buy a complete tag, sticker or inlay for an object, rather than a bare semiconductor chip. The clear round tag in the photo makes that combination visible. These examples use 13.56 MHz ISO/IEC 14443 Type A tags, a standard listed by the [ACS reader](https://store.acs.com.hk/products/575/acr1552u-usb-nfc-reader-iv/smart-card-readers/). “RFID” covers other frequencies and protocols too, so check the tag and reader together; the label alone does not establish compatibility.
+
+Before sealing a tag inside something, try placing and lifting it with your reader and Joyride. Check that the intended object is recognized consistently through its base. You can change what the object means in Joyride without rewriting the tag.
+
 ## Making objects with my printer
 
 I use a **Bambu Lab P2S 3D printer** to create some of the physical objects for this experiment. Being able to make an object gives me a way to try a shape, hold it, move it around and decide whether it feels right for the idea or action I want it to represent. [About the printer](https://blog.bambulab.com/the-icon-redefined-meet-the-p2s-a-completely-reengineered-version-of-the-ultra-productive-p1-series/).
+
+<a href="https://us.store.bambulab.com/products/p2s"><img src="https://store.bblcdn.com/s7/default/a47bdb7ac6804dc78416d8901a71aba1/P2S.jpg" alt="Bambu Lab P2S enclosed 3D printer" width="360"></a>
+
+[Bambu Lab P2S 3D printer](https://us.store.bambulab.com/products/p2s) · Photo: Bambu Lab.
 
 A printed object can carry an NFC tag so the system recognizes it. Printing also opens up possibilities for holders and enclosures that put the displays where I want them. Those are ways to extend the arrangement; this repository currently includes the software and firmware, without a collection of printable CAD or STL files.
 
@@ -92,7 +162,21 @@ You might want a single control, a room full of objects, or a completely differe
 
 ## The computer and the other pieces
 
-A **Raspberry Pi** runs my server and local input adapters. An **OWC USB hub** helps connect the inputs. The earlier version also explored a **Samsung Galaxy Fold** as a touch interface with optional tilt and microphone controls; that version remains available through `npm run pilot`.
+A **Raspberry Pi 5** runs my server and local input adapters. An **OWC Thunderbolt Hub (OWCTB4HUB5P)** helps connect the USB inputs. The earlier version also explored a **Samsung Galaxy Fold** as a touch interface with optional tilt and microphone controls; that version remains available through `npm run pilot`.
+
+<a href="https://www.raspberrypi.com/products/raspberry-pi-5/"><img src="https://www.raspberrypi.com/app/uploads/2023/09/aa7841cb-421a-4000-8ab9-c77478a4f83b-1024x683.jpg" alt="Raspberry Pi 5 single-board computer" width="360"></a>
+
+[Raspberry Pi 5](https://www.raspberrypi.com/products/raspberry-pi-5/) · Photo: Raspberry Pi.
+
+<a href="https://www.owc.com/solutions/thunderbolt-hub"><img src="https://media.owcnow.com/image/upload/w_1200,q_70,f_auto/owc-thunderbolt-hub-hero-left_201009_142310_rvfrc2" alt="OWC Thunderbolt Hub showing its front USB ports" width="360"></a>
+
+[OWC Thunderbolt Hub](https://www.owc.com/solutions/thunderbolt-hub) · Photo: OWC.
+
+<a href="https://www.samsung.com/us/smartphones/galaxy-z-fold7/"><img src="https://image-us.samsung.com/us/smartphones/galaxy-z-fold7/images/galaxy-z-fold7-features-kv.jpg?imbypass=true&amp;nocache=true" alt="Illustrative Galaxy Z Fold7 phone, not an identification of the pilot phone" width="360"></a>
+
+[Samsung Galaxy Z Fold7 — illustrative Fold-family example](https://www.samsung.com/us/smartphones/galaxy-z-fold7/) · Photo: Samsung.
+
+The phone photo illustrates the Fold family; the exact generation used in my pilot is not recorded here. It is not a requirement to buy this model.
 
 You can run the main web application on another computer with Node.js. The hub and phone are optional parts of my setup, and other suitable devices can fill those roles. The Linux input adapters and board-specific firmware have their own requirements, described below.
 
